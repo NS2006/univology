@@ -1,0 +1,28 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use App\Models\Faculty;
+use App\Models\Student;
+use App\Models\Lecturer;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $this->call([RoleSeeder::class, UserSeeder::class, FacultySeeder::class, StudentSeeder::class, LecturerSeeder::class]);
+
+        Lecturer::factory(5)->recycle([
+            Faculty::all()
+        ])->create();
+
+        Student::factory(20)->recycle([
+            Faculty::all()
+        ])->create();
+    }
+}
