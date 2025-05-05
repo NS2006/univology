@@ -11,9 +11,9 @@
 </head>
 <body>
     {{-- Testing --}}
-    <h1 class="text-3xl font-bold underline">
+    {{-- <h1 class="text-3xl font-bold underline">
     Hello world!
-    </h1>
+    </h1> --}}
 
 
     {{-- navbar --}}
@@ -23,7 +23,7 @@
         @csrf
     </form> --}}
 
-    <form action="/logout" method="POST">
+    <form action="/logout" met="POST">
         @csrf
         <button type="submit">Logout</button>
     </form>
