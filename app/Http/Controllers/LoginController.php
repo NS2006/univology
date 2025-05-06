@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Lecturer;
@@ -49,6 +50,12 @@ class LoginController extends Controller
             if($user->role->name == 'admin'){
                 return redirect()->intended('/dashboard/admin');
             } else{
+                ActivityLog::create([
+                    'type' => 'logged in',
+                    'user_id' => $user->id
+                ]);
+
+
                 return redirect()->intended('/dashboard');
             }
         }
@@ -57,6 +64,15 @@ class LoginController extends Controller
     }
 
     public function logout(Request $request){
+        $user = Auth::user();
+
+        if($user->role->name != 'admin'){
+            ActivityLog::create([
+                'type' => 'logged out',
+                'user_id' => $user->id
+            ]);
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

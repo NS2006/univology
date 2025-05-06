@@ -57,6 +57,6 @@ class AdminController extends Controller
             'name' => $validatedData['name'],
         ]);
 
-        return redirect('/dashboard/admin')->with('success','User Registration successful!');
+        return redirect('/dashboard/admin')->with('success','Faculty Registration successful!');
     }
 }

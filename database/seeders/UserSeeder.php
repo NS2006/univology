@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -17,7 +16,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'admin',
             'role_id' => 3,
-            'password' => bcrypt('univology'),
+            'password' => bcrypt('uni'),
             'remember_token' => Str::random(10),
         ]);
     }
