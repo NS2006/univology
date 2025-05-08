@@ -61,16 +61,3 @@
     </div>
 </footer>
 
-@if(session('success') && session('keep_modal_open'))
-<script>
-    document.addEventListener('DOMContentLoaded', async function(e) {
-        const modalToggle = document.querySelector('[data-modal-toggle="authentication-modal"]');
-        const modal = document.getElementById('authentication-modal');
-
-        modalToggle.click();
-        modal.classList.add('hidden');
-        setTimeout(() => modalToggle.click(), 500);
-    });
-</script>
-@endif
-

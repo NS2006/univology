@@ -20,7 +20,13 @@ Route::get('/dashboard', function () {
 })->name('dashboard')->middleware('user');
 
 Route::get('/register', function () {
-    return view('register', ['title' => 'Univology | Register']);
+    return view('register', [
+        'title' => 'Univology | Register',
+        'faculties' => Faculty::all(),
+        'students' => Student::all(),
+        'lecturers' => Lecturer::all(),
+        'courses' => Course::all()
+    ]);
 })->middleware('admin');
 
 Route::get('/dashboard/admin', function () {
@@ -36,6 +42,8 @@ Route::get('/dashboard/admin', function () {
 })->name('dashboard_admin')->middleware('admin');
 
 Route::post('/user/report', [MiscController::class,'reportUser']);
+
+Route::post('/change/password', [MiscController::class,'changePassword']);
 
 Route::post('/register/user', [AdminController::class,'registerUser']);
 

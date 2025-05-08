@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class MiscController extends Controller
 {
@@ -21,5 +23,24 @@ class MiscController extends Controller
         ]);
 
         return redirect('/dashboard')->with('success','Successfully create new report!')->with('keep_modal_open', true);;
+    }
+
+    public function changePassword(Request $request){
+        $request->validate([
+            'oldPassword' => 'required',
+            'newPassword' => 'required|min:8'
+        ]);
+
+        $user = Auth::user();
+
+        if($user && Hash::check($request['oldPassword'], $user->password)){
+            User::where('id', $user->id)->update([
+                'password' => Hash::make($request['newPassword'])
+            ]);
+
+            return back()->with('success','Successfully change the password!')->with('keep_modal_open', true);
+        }
+
+        return back()->with('error','Failed to change the password!')->with('keep_modal_open', true);
     }
 }
