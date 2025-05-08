@@ -33,5 +33,17 @@ class FacultySeeder extends Seeder
         Faculty::create([
             'name' => 'Marketing'
         ]);
+
+        Faculty::create([
+            'name' => 'Cyber Security'
+        ]);
+
+        Faculty::create([
+            'name' => 'International Relations'
+        ]);
+
+        Faculty::create([
+            'name' => 'Business Creation'
+        ]);
     }
 }

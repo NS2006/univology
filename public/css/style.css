@@ -1,0 +1,12 @@
+@keyframes progress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+@keyframes rotate {
+    0% { stroke-dashoffset: 251.2; }
+    100% { stroke-dashoffset: 0; }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}

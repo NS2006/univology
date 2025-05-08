@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
@@ -11,18 +12,24 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 
 Route::get('/', function(){
-    return view('login');
+    return view('login', ['title' => 'Univology | Login']);
 })->name('login')->middleware('guest');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', ['title' => 'Univology | Dashboard']);
 })->name('dashboard')->middleware('user');
+
+Route::get('/register', function () {
+    return view('register', ['title' => 'Univology | Register']);
+})->middleware('admin');
 
 Route::get('/dashboard/admin', function () {
     return view('dashboard', [
+        'title' => 'Univology | Dashboard',
         'faculties' => Faculty::all(),
         'students' => Student::all(),
         'lecturers' => Lecturer::all(),
+        'courses' => Course::all(),
         'logs' => ActivityLog::whereDate('created_at', now()->toDateString())->latest()->get(),
         'reports' => Report::where('status', false)->get(),
     ]);

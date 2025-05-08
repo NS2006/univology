@@ -1,32 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Univology | Dashboard</title>
-
-    {{-- tailwind --}}
-    {{-- @vite('resources/css/app.css') --}}
-</head>
-<body>
-    {{-- Testing --}}
-    {{-- <h1 class="text-3xl font-bold underline">
-    Hello world!
-    </h1> --}}
-
-
-    {{-- navbar --}}
-    <h3>{{ auth()->user()->name }}</h3>
-
-    {{-- <form action="/changepassword" method="POST">
-        @csrf
-    </form> --}}
-
-    <form action="/logout" method="POST">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+<x-layout>
+    <x-slot:title>{{ $title }}</x-slot:title>
+    <x-slot:header>Welcome back, {{ auth()->user()->name }}</x-slot:header>
 
     {{-- Show current user's name --}}
     <h1>Welcome back, {{ auth()->user()->name }}</h1>
@@ -118,6 +92,19 @@
         <br>
         <button type="submit">Submit</button>
     </form>
+
+    <br><br>
+    <form action="/register/course" method="POST">
+        @csrf
+
+        <label for="course">course</label>
+        <select name="course" id="course">
+            <option value="placeholder">input course</option>
+            @foreach ($courses as $course)
+                <option value="{{$course->id}}">{{$course->name}}</option>
+            @endforeach
+        </select>
+    </form>
     @endadmin
 
     {{-- Lecturer --}}
@@ -148,5 +135,4 @@
         <button type="submit">Submit</button>
     </form>
     @endstudent
-</body>
-</html>
+</x-layout>

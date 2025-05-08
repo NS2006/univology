@@ -20,6 +20,6 @@ class MiscController extends Controller
             'user_id' => $user->id
         ]);
 
-        return redirect('/dashboard')->with('success','Create new report successful!');
+        return redirect('/dashboard')->with('success','Successfully create new report!')->with('keep_modal_open', true);;
     }
 }

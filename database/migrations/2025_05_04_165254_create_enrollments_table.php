@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->date('enrollment_date');
             $table->string('status'); # active/completed
+            $table->integer('coin');
             $table->foreignId('student_id')->constrained(
                 table: 'students',
                 indexName: 'enrollment_student_id'
