@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->date('enrollment_date');
-            $table->string('status'); # active/completed
-            $table->integer('coin');
+            $table->timestamps(); // created_at = enrollment_date
+            $table->string('status')->default('active'); # active/completed
+            $table->integer('coin')->default(0);
             $table->foreignId('student_id')->constrained(
                 table: 'students',
                 indexName: 'enrollment_student_id'

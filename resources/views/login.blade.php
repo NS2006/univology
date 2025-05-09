@@ -12,13 +12,13 @@
 </head>
 <body>
     <!-- Step Progress Bar with Animated Transition -->
-    <div class="flex items-center w-full max-w-md">
+    {{-- <div class="flex items-center w-full max-w-md">
         <div class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full">1</div>
         <div class="h-1 flex-1 bg-blue-500 animate-pulse"></div>
         <div class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full">2</div>
         <div class="h-1 flex-1 bg-gray-300"></div>
         <div class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-500 border border-gray-300 rounded-full">3</div>
-    </div>
+    </div> --}}
 
     <section class="bg-gray-50 dark:bg-gray-900">
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

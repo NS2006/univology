@@ -73,7 +73,7 @@
           </div>
           <ul class="py-2" aria-labelledby="user-menu-button">
             <li>
-                <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer" type="button">
+                <button data-modal-target="changePassword" data-modal-toggle="changePassword" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer" type="button">
                     Change Password
                 </button>
             </li>
@@ -131,8 +131,8 @@
 @if(session('keep_modal_open') || $errors->any())
 <script>
     document.addEventListener('DOMContentLoaded', async function(e) {
-        const modalToggle = document.querySelector('[data-modal-toggle="authentication-modal"]');
-        const modal = document.getElementById('authentication-modal');
+        const modalToggle = document.querySelector('[data-modal-toggle="changePassword"]');
+        const modal = document.getElementById('changePassword');
 
         modalToggle.click();
         modal.classList.add('hidden');

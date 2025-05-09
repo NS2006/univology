@@ -2,7 +2,7 @@
     <x-slot:title>{{ $title }}</x-slot:title>
     <x-slot:header>Register Page</x-slot:header>
 
-    
+    <a href="/register/classroom/choose-faculty">Register Classroom</a>
 
 
     <h1>Faculty</h1>

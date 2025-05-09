@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([RoleSeeder::class, UserSeeder::class, FacultySeeder::class, StudentSeeder::class, LecturerSeeder::class, CourseSeeder::class]);
 
-        Lecturer::factory(5)->recycle([
+        Lecturer::factory(10)->recycle([
             Faculty::all()
         ])->create();
 
-        Student::factory(20)->recycle([
+        Student::factory(50)->recycle([
             Faculty::all()
         ])->create();
     }
