@@ -105,7 +105,7 @@
                             class="hidden peer"
                             {{ $selectedLecturer && $selectedLecturer->id == $lecturer->id ? 'checked' : '' }}
                             onchange="handleLecturerSelection(this)">
-                        <div class="p-4 border rounded-lg cursor-pointer hover:bg-blue-200 transition-colors course-card
+                        <div class="p-4 border rounded-lg cursor-pointer hover:bg-blue-200 transition-colors lecturer-card
                             {{ $selectedLecturer && $selectedLecturer->id == $lecturer->id ? 'bg-blue-200 border-blue-500' : '' }}">
                             <p class="font-medium">{{ $lecturer->lecturer_id }} - {{ $lecturer->user->name }}</p>
                         </div>
@@ -206,7 +206,7 @@
                     </span>
                 @endif
 
-                <button type="submit" id="next-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors {{ !$canProceed ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}" {{ !$canProceed ? 'disabled' : '' }}>
+                <button type="submit" id="next-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors {{ !$canProceed ? 'opacity-50 cursor-not-allowed' : '' }} cursor-pointer" {{ !$canProceed ? 'disabled' : '' }}>
                     {{ $step != 5 ? "Next" : "Register New Classroom"}}
                 </button>
             </div>

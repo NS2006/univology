@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
@@ -58,5 +59,17 @@ class AdminController extends Controller
         ]);
 
         return redirect('/dashboard/admin')->with('success','Faculty Registration successful!');
+    }
+
+    public function solveReport(Request $request){
+        $report =  Report::where('id', $request->report_id)->first();
+        Report::where('id', $request->report_id)->update([
+            'status' => $report->status ? false : true
+        ]);
+
+        return redirect('/dashboard/admin')->with([
+            'success-solve-report' => true,
+            'report-id' => $report->id
+        ]);
     }
 }

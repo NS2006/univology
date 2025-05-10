@@ -22,7 +22,7 @@ class MiscController extends Controller
             'user_id' => $user->id
         ]);
 
-        return redirect('/dashboard')->with('success','Successfully create new report!')->with('keep_modal_open', true);;
+        return redirect('/dashboard')->with('success-report','Successfully create new report!');
     }
 
     public function changePassword(Request $request){
@@ -38,9 +38,9 @@ class MiscController extends Controller
                 'password' => Hash::make($request['newPassword'])
             ]);
 
-            return back()->with('success','Successfully change the password!')->with('keep_modal_open', true);
+            return back()->with('success-change-password','Successfully change the password!')->with('keep_modal_open', true);
         }
 
-        return back()->with('error','Failed to change the password!')->with('keep_modal_open', true);
+        return back()->with('error-change-password','Failed to change the password!')->with('keep_modal_open', true);
     }
 }
