@@ -27,9 +27,6 @@ class LecturerFactory extends Factory
             "role_id" => 2
         ]);
 
-
-        $email_name = User::getEmailName($name);
-
         return [
             'lecturer_id' => 'LEC' . rand(10000, 99999),
             'email' => Lecturer::getEmail($name),

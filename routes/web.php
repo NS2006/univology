@@ -5,6 +5,7 @@ use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Enrollment;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::get('/', function(){
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
+    $students = null;
+
     if($user->role->name == 'student'){
         $u = $user->student;
         $enrollments = $u->enrollments;
@@ -29,12 +32,13 @@ Route::get('/dashboard', function () {
     } else{
         $u = $user->lecturer;
         $classrooms = $u->classrooms;
+        $enrollments = Enrollment::whereIn('classroom_id', $classrooms->pluck('id'))->orderBy('coin', 'DESC')->get();
     }
-
 
     return view('dashboard', [
         'title' => 'Univology | Dashboard',
-        'classrooms' => $classrooms
+        'classrooms' => $classrooms,
+        'enrollments' => $enrollments
     ]);
 })->name('dashboard')->middleware('user');
 

@@ -62,7 +62,7 @@ class User extends Authenticatable
     }
 
     public static function getDefaultPassword(string $name): string{
-        return bcrypt('univology-' . Str::slug($name));
+        return 'uni-' . Str::slug($name);
     }
 
     public function role(): BelongsTo{

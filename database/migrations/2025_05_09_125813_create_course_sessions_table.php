@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('course_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained(
-                table: 'course_sessions',
-                indexName: 'course_materials_course_session_id'
+                table: 'courses',
+                indexName: 'course_session_course_id'
             );
             $table->timestamps();
         });

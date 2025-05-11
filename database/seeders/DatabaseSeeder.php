@@ -24,5 +24,7 @@ class DatabaseSeeder extends Seeder
         Student::factory(50)->recycle([
             Faculty::all()
         ])->create();
+
+        $this->call([ClassroomSeeder::class]);
     }
 }

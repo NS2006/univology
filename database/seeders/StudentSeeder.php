@@ -26,8 +26,25 @@ class StudentSeeder extends Seeder
         Student::create([
             'student_id' => 'STU' . rand(10000, 99999),
             'email' => Student::getEmail($name),
-            'faculty_id' => Faculty::inRandomOrder()->first()->id,
+            'faculty_id' => 1,
             'user_id' => $user->id
         ]);
+
+        for($i = 1; $i <= 10; $i++){
+            $name = "dummy" . $i;
+
+            $user = User::create([
+                "name"=> $name,
+                "password" => bcrypt("dummy"),
+                "role_id" => 1
+            ]);
+
+            Student::create([
+                'student_id' => 'STU' . rand(10000, 99999),
+                'email' => Student::getEmail($name),
+                'faculty_id' => 1,
+                'user_id' => $user->id
+            ]);
+        }
     }
 }

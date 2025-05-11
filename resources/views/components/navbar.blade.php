@@ -111,7 +111,7 @@
         </li>
 
         <li>
-            <x-nav-link href='/assignments' :active="request()->is('assignment')">Register</x-nav-link>
+            <x-nav-link href='/assignments' :active="request()->is('assignment')">Assignment</x-nav-link>
         </li>
         @enduser
 
