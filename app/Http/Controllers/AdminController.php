@@ -34,13 +34,13 @@ class AdminController extends Controller
 
         if($validatedData['role'] == 'student'){
             $user->student()->create([
-                'student_id' => 'STU' . rand(10000, 99999),
+                'student_id' => Student::generateStudentId(),
                 'email' => Student::getEmail($validatedData['name']),
                 'faculty_id' => (int)($validatedData['faculty'])
             ]);
         } else{
             $user->lecturer()->create([
-                'lecturer_id' => 'LEC' . rand(10000, 99999),
+                'lecturer_id' => Lecturer::generateLecturerId(),
                 'email' => Lecturer::getEmail($validatedData['name']),
                 'faculty_id' => (int)($validatedData['faculty'])
             ]);

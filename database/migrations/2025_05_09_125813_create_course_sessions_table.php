@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('course_sessions', function (Blueprint $table) {
             $table->id();
+            $table->integer('session_number');
+            $table->string('title');
             $table->foreignId('course_id')->constrained(
                 table: 'courses',
                 indexName: 'course_session_course_id'

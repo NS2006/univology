@@ -126,7 +126,7 @@
   </nav>
 
 
-@if(session('keep_modal_open') || $errors->any())
+@if(session('keep_modal_open') || $errors->has('new_password') || $errors->has('old_password'))
 <script>
     document.addEventListener('DOMContentLoaded', async function() {
         const modalToggle = document.querySelector('[data-modal-toggle="change-password"]');

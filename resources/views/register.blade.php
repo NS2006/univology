@@ -4,6 +4,7 @@
 
     <a href="/register/classroom/choose-faculty">Register Classroom</a>
 
+    <a href="/register/course/choose-faculty">Register Course</a>
 
     <h1>Faculty</h1>
     <ul>

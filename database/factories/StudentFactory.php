@@ -28,7 +28,7 @@ class StudentFactory extends Factory
         ]);
 
         return [
-            'student_id' => 'STU' . rand(10000, 99999),
+            'student_id' => Student::generateStudentId(),
             'email' => Student::getEmail($name),
             'faculty_id' => Faculty::inRandomOrder()->first()->id,
             'user_id' => $user->id

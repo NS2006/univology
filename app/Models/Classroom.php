@@ -30,10 +30,8 @@ class Classroom extends Model
         return $this->hasMany(Enrollment::class);
     }
 
-    public static function getClassCode(Faculty $f): string{
-        $classCode = $f->name[0];
-
-        $name = $f->name;
+    public static function generateClassCode(string $name): string{
+        $classCode = $name[0];
 
         $key = 0;
         for($i = 0; $i < strlen($name); $i++){

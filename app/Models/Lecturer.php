@@ -16,6 +16,14 @@ class Lecturer extends Model
 
     protected $with = ['faculty', 'user'];
 
+    public static function generateLecturerId(){
+        do{
+            $lecturerId = 'LEC' . rand(10000, 99999);
+        }while(Lecturer::where('lecturer_id', $lecturerId)->count() > 0);
+
+        return $lecturerId;
+    }
+
     public static function getEmail($name): string{
         return User::getEmailName($name) . '@uni.edu';
     }

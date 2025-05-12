@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\ClearRegistration;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'lecturer' => \App\Http\Middleware\LecturerMiddleware::class,
             'student' => \App\Http\Middleware\StudentMiddleware::class,
+            'clear.registration' => ClearRegistration::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

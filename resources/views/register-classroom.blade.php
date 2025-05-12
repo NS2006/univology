@@ -13,7 +13,7 @@
     @endif
 
     <div class="px-4 md:px-8">
-        @if (session('success'))
+        @if (session('registration.classroom.success'))
             <div id="pop-up-register" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-opacity-50">
                 <div class="relative w-full max-w-2xl">
                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -264,38 +264,38 @@
         highlightSelectedItems();
     }
 
-function highlightSelectedItems() {
-    // Highlight faculty if selected
-    const selectedFacultyRadio = document.querySelector('.faculty-radio:checked');
-    if (selectedFacultyRadio) {
-        highlightSelectedCard(selectedFacultyRadio.closest('.faculty-label').querySelector('.faculty-card'));
-    }
-
-    // Highlight course if selected
-    const selectedCourseRadio = document.querySelector('input[name="course_id"]:checked');
-    if (selectedCourseRadio) {
-        highlightSelectedCard(selectedCourseRadio.closest('label').querySelector('.course-card'));
-    }
-
-    document.querySelectorAll('input[name="student_ids[]"]:checked').forEach(checkbox => {
-        highlightSelectedCard(checkbox.closest('label').querySelector('.student-card'));
-    });
-}
-
-function highlightSelectedCard(selectedCard) {
-    // Remove highlights from all cards of same type
-    const cardType = selectedCard.classList.contains('faculty-card') ? 'faculty-card' : 'course-card';
-        if (!selectedCard.classList.contains('student-card')) {
-            const cardType = selectedCard.classList.contains('faculty-card') ? 'faculty-card' :
-                            selectedCard.classList.contains('course-card') ? 'course-card' :
-                            selectedCard.classList.contains('lecturer-card') ? 'lecturer-card' : '';
-
-            if (cardType) {
-                document.querySelectorAll('.' + cardType).forEach(card => {
-                    card.classList.remove('bg-blue-200', 'border-blue-500');
-                });
-            }
+    function highlightSelectedItems() {
+        // Highlight faculty if selected
+        const selectedFacultyRadio = document.querySelector('.faculty-radio:checked');
+        if (selectedFacultyRadio) {
+            highlightSelectedCard(selectedFacultyRadio.closest('.faculty-label').querySelector('.faculty-card'));
         }
+
+        // Highlight course if selected
+        const selectedCourseRadio = document.querySelector('input[name="course_id"]:checked');
+        if (selectedCourseRadio) {
+            highlightSelectedCard(selectedCourseRadio.closest('label').querySelector('.course-card'));
+        }
+
+        document.querySelectorAll('input[name="student_ids[]"]:checked').forEach(checkbox => {
+            highlightSelectedCard(checkbox.closest('label').querySelector('.student-card'));
+        });
+    }
+
+    function highlightSelectedCard(selectedCard) {
+        // Remove highlights from all cards of same type
+        const cardType = selectedCard.classList.contains('faculty-card') ? 'faculty-card' : 'course-card';
+            if (!selectedCard.classList.contains('student-card')) {
+                const cardType = selectedCard.classList.contains('faculty-card') ? 'faculty-card' :
+                                selectedCard.classList.contains('course-card') ? 'course-card' :
+                                selectedCard.classList.contains('lecturer-card') ? 'lecturer-card' : '';
+
+                if (cardType) {
+                    document.querySelectorAll('.' + cardType).forEach(card => {
+                        card.classList.remove('bg-blue-200', 'border-blue-500');
+                    });
+                }
+            }
 
         // Add highlight to selected card
         selectedCard.classList.add('bg-blue-200', 'border-blue-500');
@@ -303,21 +303,21 @@ function highlightSelectedCard(selectedCard) {
 
     function handleFacultySelection(radio) {
         if (radio.checked) {
-            enableNextButton();
+            updateNextButtonState();
             highlightSelectedCard(radio.closest('.faculty-label').querySelector('.faculty-card'));
         }
     }
 
     function handleCourseSelection(radio) {
         if (radio.checked) {
-            enableNextButton();
+            updateNextButtonState();
             highlightSelectedCard(radio.closest('label').querySelector('.course-card'));
         }
     }
 
     function handleLecturerSelection(radio) {
         if (radio.checked) {
-            enableNextButton();
+            updateNextButtonState();
             highlightSelectedCard(radio.closest('label').querySelector('.lecturer-card'));
         }
     }
@@ -325,13 +325,5 @@ function highlightSelectedCard(selectedCard) {
     function handleStudentSelection(checkbox) {
         highlightSelectedCard(checkbox.closest('label').querySelector('.student-card'));
         updateNextButtonState();
-    }
-
-    function enableNextButton() {
-        const nextButton = document.getElementById('next-btn');
-        if (nextButton) {
-            nextButton.disabled = false;
-            nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
     }
 </script>

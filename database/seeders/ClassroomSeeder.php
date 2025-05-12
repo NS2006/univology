@@ -19,7 +19,7 @@ class ClassroomSeeder extends Seeder
         $classroom = Classroom::create([
             'lecturer_id' => 1,
             'course_id' => 1,
-            'class_code' => Classroom::getClassCode(Faculty::where('id', 1)->first()),
+            'class_code' => Classroom::generateClassCode(Faculty::where('id', '=', 1)->first()->name),
             'schedule' => 'monday',
         ]);
 

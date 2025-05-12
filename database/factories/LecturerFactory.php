@@ -28,7 +28,7 @@ class LecturerFactory extends Factory
         ]);
 
         return [
-            'lecturer_id' => 'LEC' . rand(10000, 99999),
+            'lecturer_id' => Lecturer::generateLecturerId(),
             'email' => Lecturer::getEmail($name),
             'faculty_id' => Faculty::inRandomOrder()->first()->id,
             'user_id' => $user->id

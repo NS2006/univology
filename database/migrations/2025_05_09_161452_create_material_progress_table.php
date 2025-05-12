@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('material_progress', function (Blueprint $table) {
             $table->id();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

@@ -15,13 +15,13 @@ class Course extends Model
 
     protected $with = ['faculty'];
 
-    public static function generateCourseCode(string $name){
-        $code = strtoupper($name[0] . $name[1]);
+    public static function generateCourseId(string $name){
+        $id = strtoupper($name[0] . $name[1]);
 
         $key = 0;
         for($i = 0; $i <strlen($name); $i++){
             if($key == 1){
-                $code .= strtoupper($name[$i] . $name[$i+1]);
+                $id .= strtoupper($name[$i] . $name[$i+1]);
                 break;
             }
 
@@ -31,10 +31,14 @@ class Course extends Model
         }
 
         if($key == 0){
-            $code .= strtoupper($name[2] . $name[3]);
+            $id .= strtoupper($name[2] . $name[3]);
         }
 
-        return $code . rand(10000, 99999);
+        do{
+            $courseId = $id . rand(10000, 99999);
+        }while(Course::where('course_id', $courseId)->exists());
+
+        return $courseId;
     }
 
     public function faculty(): BelongsTo{
@@ -43,5 +47,9 @@ class Course extends Model
 
     public function classrooms(): HasMany{
         return $this->hasMany(Classroom::class);
+    }
+
+    public function course_session(): HasMany{
+        return $this->hasMany(CourseSession::class);
     }
 }

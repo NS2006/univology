@@ -18,6 +18,14 @@ class Student extends Model
 
     protected $with = ['faculty', 'user'];
 
+    public static function generateStudentId(){
+        do{
+            $studentId = 'STU' . rand(10000, 99999);
+        }while(Student::where('student_id', $studentId)->count() > 0);
+
+        return $studentId;
+    }
+
     public static function getEmail($name): string{
         return User::getEmailName($name) . '@uni.ac.id';
     }
