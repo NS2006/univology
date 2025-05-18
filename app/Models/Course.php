@@ -49,7 +49,7 @@ class Course extends Model
         return $this->hasMany(Classroom::class);
     }
 
-    public function course_session(): HasMany{
+    public function course_sessions(): HasMany{
         return $this->hasMany(CourseSession::class);
     }
 }

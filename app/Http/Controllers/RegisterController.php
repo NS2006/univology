@@ -11,6 +11,7 @@ use App\Models\Enrollment;
 use App\Models\MainMaterial;
 use Illuminate\Http\Request;
 use App\Models\CourseSession;
+use App\Models\MainMaterialProgress;
 
 class RegisterController extends Controller
 {
@@ -57,10 +58,19 @@ class RegisterController extends Controller
 
             $students = session()->get('registration.classroom.students');
             foreach($students as $student) {
-                Enrollment::create([
+                $enrollment = Enrollment::create([
                     'student_id' => $student->id,
                     'classroom_id' => $classroom->id
                 ]);
+
+                foreach($classroom->course->course_sessions as $course_session){
+                    foreach($course_session->main_materials as $main_material){
+                        MainMaterialProgress::create([
+                            'enrollment_id' => $enrollment->id,
+                            'main_material_id' => $main_material->id
+                        ]);
+                    }
+                }
             }
 
             session()->forget('registration.classroom');
@@ -253,8 +263,8 @@ class RegisterController extends Controller
         }
 
         if($step == 3 && session()->has("registration.course.fill_session")) {
-            $sessionTitle = "Dango Daikazoku";
-            $sessionMaterialLink = "https://www.youtube.com/watch?v=rFKKSQ8GgHk";
+            $sessionTitle = CourseSession::getDummyTitle();
+            $sessionMaterialLink = MainMaterial::getDummyLink();
         } else{
             $sessionTitle = "";
             $sessionMaterialLink = "";

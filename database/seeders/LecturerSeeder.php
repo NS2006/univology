@@ -26,7 +26,7 @@ class LecturerSeeder extends Seeder
         Lecturer::create([
             'lecturer_id' => 'LEC' . rand(10000, 99999),
             'email' => Lecturer::getEmail($name),
-            'faculty_id' => Faculty::inRandomOrder()->first()->id,
+            'faculty_id' => 1,
             'user_id' => $user->id
         ]);
     }

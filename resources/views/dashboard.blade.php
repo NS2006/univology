@@ -168,15 +168,6 @@
                 <div class="overflow-y-auto flex-1">
                     @forelse ($logs as $log)
                         <div class="flex items-start p-4 dark:hover:bg-gray-50 dark:bg-gray-100 rounded-lg transition-colors group mb-2">
-                            <div class="relative mt-1 mr-3 flex-shrink-0">
-                                <div class="w-3 h-3 rounded-full {{ $log->type == 'logged in' ? 'bg-green-400' : 'bg-yellow-400' }}"></div>
-                                @if($log->type == 'logged in')
-                                    <div class="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75"></div>
-                                @else
-                                    <div class="absolute inset-0 rounded-full bg-yellow-400 animate-ping opacity-75"></div>
-                                @endif
-                            </div>
-
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between gap-2">
                                     <div class="flex items-center gap-3">
@@ -254,11 +245,11 @@
     <div class="flex flex-wrap min-h-[70vh] mb-2.5">
         <!-- Section 1 -->
         <div class="w-full md:w-1/3 p-4 h-[70vh]">
-            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
-                <h3 class="text-2xl font-bold text-center">Student's Coin Leaderboard</h3>
-                <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
+            <div class="rounded-lg p-6 h-full flex flex-col flex-1 dark:bg-gray-200">
+                <h3 class="text-2xl font-bold text-center dark:text-gray-800">Student's Coin Leaderboard</h3>
+                <hr class="my-4 h-px bg-gray-300 dark:bg-gray-400 border-0">
 
-                <div class="flex flex-col h-full">
+                <div class="flex flex-col h-full max-h-[calc(70vh-150px)]">
                     <div class="flex justify-between items-center mb-4 px-2">
                         <h3 class="text-lg font-bold dark:text-gray-800">Top Students</h3>
                         <button class="text-sm dark:text-blue-600 hover:underline cursor-pointer" data-modal-target="show-leaderboard" data-modal-toggle="show-leaderboard">
@@ -266,7 +257,7 @@
                         </button>
                     </div>
 
-                    <div class="space-y-3 flex-1 overflow-y-auto">
+                    <div class="space-y-3 flex-1 overflow-y-auto ">
                         {{-- pop up --}}
                         <div id="show-leaderboard" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative p-4 w-full max-w-md max-h-full">
@@ -283,21 +274,35 @@
                                         </button>
                                     </div>
 
+
+                                    {{-- content --}}
                                     <div class="p-4 md:p-5 bg-white dark:bg-gray-800 max-h-[400px] overflow-y-auto flex-1">
                                         @forelse ($enrollments as $enrollment)
-                                            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 mb-2">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-sm">
+                                            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-gray-200 dark:border-gray-700 group">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
+                                                        @switch($loop->iteration)
+                                                            @case(1) bg-gradient-to-br from-amber-400 to-amber-600 text-white @break
+                                                            @case(2) bg-gradient-to-br from-gray-300 to-gray-500 text-white @break
+                                                            @case(3) bg-gradient-to-br from-amber-700 to-amber-900 text-white @break
+                                                            @default bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
+                                                        @endswitch
+                                                        font-bold">
                                                         #{{ $loop->iteration }}
                                                     </div>
 
-                                                    <div class="flex-1 overflow-hidden">
-                                                        <div class="flex justify-between items-center gap-2">
-                                                            <p class="font-semibold text-gray-800 dark:text-gray-100 truncate text-sm max-w-[120px] sm:max-w-[160px]">
+                                                    <!-- Student Info -->
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="flex justify-between items-baseline">
+                                                            <p class="font-semibold text-gray-800 dark:text-gray-100 truncate">
                                                                 {{ $enrollment->student->user->name }}
                                                             </p>
-                                                            <span class="text-sm font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap">
-                                                                {{ $enrollment->coin }} coins
+                                                            <span class="flex items-center text-sm font-bold text-amber-600 dark:text-amber-400">
+                                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+                                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                                                </svg>
+                                                                {{ $enrollment->coin }}
                                                             </span>
                                                         </div>
                                                         <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -322,28 +327,40 @@
 
                         {{-- content --}}
                         @forelse ($enrollments->take(5) as $enrollment)
-                            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-sm">
-                                        #{{ $loop->iteration }}
-                                    </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-gray-200 dark:border-gray-700 group mx-1">
+                            <div class="flex items-center gap-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
+                                    @switch($loop->iteration)
+                                        @case(1) bg-gradient-to-br from-amber-400 to-amber-600 text-white @break
+                                        @case(2) bg-gradient-to-br from-gray-300 to-gray-500 text-white @break
+                                        @case(3) bg-gradient-to-br from-amber-700 to-amber-900 text-white @break
+                                        @default bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
+                                    @endswitch
+                                    font-bold">
+                                    #{{ $loop->iteration }}
+                                </div>
 
-                                    <div class="flex-1 overflow-hidden">
-                                        <div class="flex justify-between items-center gap-2">
-                                            <p class="font-semibold text-gray-800 dark:text-gray-100 truncate text-sm max-w-[120px] sm:max-w-[160px]">
-                                                {{ $enrollment->student->user->name }}
-                                            </p>
-                                            <span class="text-sm font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap">
-                                                {{ $enrollment->coin }} coins
-                                            </span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                            {{ $enrollment->student->student_id }} • {{ $enrollment->classroom->class_code }}
+                                <!-- Student Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-baseline">
+                                        <p class="font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                            {{ $enrollment->student->user->name }}
                                         </p>
+                                        <span class="flex items-center text-sm font-bold text-amber-600 dark:text-amber-400">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                            </svg>
+                                            {{ $enrollment->coin }}
+                                        </span>
                                     </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                        {{ $enrollment->student->student_id }} • {{ $enrollment->classroom->class_code }}
+                                    </p>
                                 </div>
                             </div>
-                        @empty
+                        </div>
+                    @empty
                         <div class="flex flex-col items-center justify-center h-full p-8 text-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -351,7 +368,7 @@
                             <h3 class="text-xl font-bold text-gray-500 mb-2">No Students Found</h3>
                             <p class="text-gray-400">You don't have any students enrolled yet.</p>
                         </div>
-                        @endforelse
+                    @endforelse
                     </div>
                 </div>
             </div>
@@ -384,6 +401,53 @@
 
     {{-- Student --}}
     @student
-    <h1>Student Page</h1>
+    <div class="flex flex-wrap min-h-[70vh] mb-2.5">
+        <!-- Section 1 -->
+        <div class="w-full md:w-1/3 p-4 h-[70vh]">
+            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-white shadow-sm dark:border-gray-700">
+                <h3 class="text-2xl font-bold text-center dark:text-gray-800">Course Progress</h3>
+                <hr class="my-4 h-px bg-gray-200 border-0 dark:bg-gray-700">
+
+                <div class="overflow-y-auto flex-1 -mx-2 px-2">
+                    @foreach ($enrollments as $enrollment)
+                        <x-course-card :enrollment="$enrollment" class="mb-4" />
+                    @endforeach
+                </div>
+
+                <!-- Empty State -->
+                @if($enrollments->isEmpty())
+                    <div class="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                        <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-lg">No enrolled courses yet</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="w-full md:w-1/3 p-4 h-[70vh]">
+          <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
+            <h3 class="text-2xl font-bold text-center">User's Report</h3>
+            <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
+
+            <div class="overflow-y-auto flex-1">
+                <p>content</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="w-full md:w-1/3 p-4 h-[70vh]">
+            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
+                <h3 class="text-2xl font-bold text-center">Today's Logs</h3>
+                <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
+                <div class="overflow-y-auto flex-1">
+                    <p>contentt</p>
+                </div>
+            </div>
+        </div>
+    </div>
     @endstudent
 </x-layout>

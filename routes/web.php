@@ -5,15 +5,17 @@ use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Classroom;
 use App\Models\Enrollment;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function(){
     return view('login', ['title' => 'Univology | Login']);
@@ -31,6 +33,15 @@ Route::get('/register', function () {
     ]);
 })->middleware('admin');
 
+Route::get('/courses', [CourseController::class, 'index'])->middleware('user');
+
+Route::get('/classroom/{classroom:class_id}', function(Classroom $classroom){
+    return view('classroom', [
+        'title' => $classroom->class_code . ' ' . $classroom->course->name,
+        'classroom' => $classroom
+    ]);
+});
+
 Route::middleware(['clear.registration'])->group(function () {
     Route::prefix('register/classroom')->group(function () {
         // Show step
@@ -39,7 +50,7 @@ Route::middleware(['clear.registration'])->group(function () {
         // Store data selection
         Route::post('/store-data', [RegisterController::class, 'classroomStoreData'])->middleware('admin')->name('register.classroom.store-data');
     });
-    
+
     Route::prefix('register/course')->group(function () {
         // Show step
         Route::get('/{course_route}', [RegisterController::class, 'courseRoute'])->middleware('admin')->name('register.course.course_route');

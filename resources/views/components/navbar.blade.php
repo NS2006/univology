@@ -107,7 +107,7 @@
             <x-nav-link href='/dashboard' :active="request()->is('dashboard')">Dashboard</x-nav-link>
         </li>
         <li>
-            <x-nav-link href='/courses' :active="request()->is('course')">Course</x-nav-link>
+            <x-nav-link href='/courses' :active="request()->is('course*')">Course</x-nav-link>
         </li>
 
         <li>
