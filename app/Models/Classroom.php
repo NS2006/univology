@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Enrollment;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,10 @@ class Classroom extends Model
 
     public function enrollments(): HasMany{
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function classroom_sessions(): HasMany{
+        return $this->hasMany(ClassroomSession::class);
     }
 
     public static function generateClassCode(string $name): string{
@@ -60,5 +65,13 @@ class Classroom extends Model
         }
 
         return str($classCode . $numCode);
+    }
+
+    protected static function boot(){
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->class_id = Str::uuid();
+        });
     }
 }

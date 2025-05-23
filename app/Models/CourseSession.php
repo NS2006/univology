@@ -36,6 +36,11 @@ class CourseSession extends Model
     public function course(): BelongsTo{
         return $this->belongsTo(Course::class);
     }
+
+    public function classroom_sessions(): HasMany{
+        return $this->hasMany(ClassroomSession::class);
+    }
+
     public function main_materials(): HasMany{
         return $this->hasMany(MainMaterial::class);
     }

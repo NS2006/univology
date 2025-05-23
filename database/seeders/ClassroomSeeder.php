@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\Enrollment;
 use Illuminate\Database\Seeder;
+use App\Models\ClassroomSession;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ClassroomSeeder extends Seeder
@@ -22,6 +24,21 @@ class ClassroomSeeder extends Seeder
             'class_code' => Classroom::generateClassCode(Faculty::where('id', '=', 1)->first()->name),
             'schedule' => 'monday',
         ]);
+
+        $credit = $classroom->course->credit;
+
+        $startDate = Carbon::today();
+        $courseSessions = $classroom->course->course_sessions;
+        for($i = 1; $i <= $credit * 6; $i++){
+            $sessionDate = $startDate->copy()->addDays(($i - 1) * 7);
+            ClassroomSession::create([
+                'date' => $sessionDate,
+                'start_time' => '08:00:00',
+                'end_time' => '10:00:00',
+                'classroom_id' => $classroom->id,
+                'course_session_id' => $courseSessions[$i-1]->id
+            ]);
+        }
 
         $students = Student::where('faculty_id', 1)->get();
         foreach($students as $student) {

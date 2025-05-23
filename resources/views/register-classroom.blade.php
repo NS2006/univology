@@ -8,6 +8,8 @@
         <x-slot:header>Classroom Registration | Choose Lecturer</x-slot:header>
     @elseif ($step == 4)
         <x-slot:header>Classroom Registration | Choose Student</x-slot:header>
+    @elseif ($step == 5)
+        <x-slot:header>Classroom Registration | Classroom Information</x-slot:header>
     @else
         <x-slot:header>Classroom Registration | Confirmation</x-slot:header>
     @endif
@@ -35,7 +37,7 @@
 
 
         <div class="flex items-center w-full px-4">
-            @for ($curr = 1; $curr <= 5; $curr++)
+            @for ($curr = 1; $curr <= 6; $curr++)
                 @if ($step >= $curr)
                     <a href="{{ route('register.classroom.classroom_route', ['classroom_route' => $classroom_routes[$curr]]) }}" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 text-white">
                         {{ $curr }}
@@ -44,7 +46,7 @@
                     <div class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-500 border border-gray-300 rounded-full">{{ $curr }}</div>
                 @endif
 
-                @if ($curr != 5)
+                @if ($curr != 6)
                     @if ($step > $curr)
                         <div class="h-1 flex-1 bg-blue-500 animate-pulse"></div>
                     @else
@@ -141,6 +143,18 @@
                 @endif
 
                 @if ($step == 5)
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Select Date:</h3>
+                        <input type="date" name="date" id="date" min="{{ now()->format('Y-m-d') }}" class="p-3 border rounded-lg bg-blue-50 w-full font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ old('date') }}" required>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Start Time:</h3>
+                        <input type="time" alt=""name="start_time" alt=""id="start_time" alt=""class="p-3 border rounded-lg bg-blue-50 w-full font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500" alt=""min="08:00" alt=""max="20:00" alt=""step="1800" alt=""value="{{ old('start_time', '08:00') }}">
+                    </div>
+                @endif
+
+                @if ($step == 6)
                     <input type="hidden" name="classCode" value="{{ $classCode }}">
 
                     <div class="col-span-full">
@@ -151,21 +165,25 @@
                     </div>
 
                     <div class="col-span-full">
-                        <h3 class="text-lg font-medium mb-2">Select Schedule:</h3>
-                        <select name="schedule" id="schedule" class="p-4 border rounded-lg bg-blue-50 w-full font-medium">
-                            <option value="selectSchedule">Please Select The Schedule</option>
-                            <option value="monday">Monday</option>
-                            <option value="tuesday">Tuesday</option>
-                            <option value="wednesday">Wednesday</option>
-                            <option value="thursday">Thursday</option>
-                            <option value="friday">Friday</option>
-                            <option value="saturday">Saturday</option>
-                            <option value="sunday">Sunday</option>
-                        </select>
+                        <h3 class="text-lg font-medium mb-2">Selected Schedule:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">
+                            {{ \Carbon\Carbon::parse($classroomInformation['date'])->format('l') }}</p>
+                        </div>
+                    </div>
 
-                        @error('schedule')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Start Time:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $classroomInformation['start_time'] }} GMT+7</p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">End Time:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $classroomInformation['end_time'] }} GMT+7</p>
+                        </div>
                     </div>
 
                     <div class="col-span-full">
@@ -182,7 +200,7 @@
                         </div>
                     </div>
 
-                    <!-- Selected Students Section -->
+
                     <div class="col-span-full">
                         <h3 class="text-lg font-medium mb-2">Selected Students:</h3>
                     </div>
@@ -192,6 +210,40 @@
                         <p class="font-medium">{{ $student->student_id }} - {{ $student->user->name }}</p>
                     </div>
                     @endforeach
+
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Session Information:</h3>
+                    </div>
+
+                    @php
+                        $startDate = \Carbon\Carbon::parse($classroomInformation['date']);
+                    @endphp
+
+                    @for($i = 1; $i <= $selectedCourse->credit * 6; $i++)
+                        @php
+                            $sessionDate = $startDate->copy()->addDays(($i - 1) * 7);
+                            $sessionNumber = $i;
+                        @endphp
+
+                        <div class="p-4 border rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors mb-3 shadow-sm">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg text-blue-800">Session {{ $sessionNumber }}</p>
+                                    <p class="text-gray-600 mt-1">
+                                        <span class="font-semibold">{{ $sessionDate->format('l') }}</span>,
+                                        {{ $sessionDate->format('F j, Y') }}
+                                    </p>
+                                    <p class="text-sm text-gray-500 mt-2">
+                                        {{ $classroomInformation['start_time'] }} - {{ $classroomInformation['end_time'] }} GMT+7
+                                    </p>
+                                </div>
+                                <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                                    Week {{ $i }}
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
                 @endif
             </div>
 
@@ -207,7 +259,7 @@
                 @endif
 
                 <button type="submit" id="next-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors {{ !$canProceed ? 'opacity-50 cursor-not-allowed' : '' }} cursor-pointer" {{ !$canProceed ? 'disabled' : '' }}>
-                    {{ $step != 5 ? "Next" : "Register New Classroom"}}
+                    {{ $step != 6 ? "Next" : "Register New Classroom"}}
                 </button>
             </div>
         </form>

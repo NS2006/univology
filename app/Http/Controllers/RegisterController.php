@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Student;
@@ -11,6 +12,7 @@ use App\Models\Enrollment;
 use App\Models\MainMaterial;
 use Illuminate\Http\Request;
 use App\Models\CourseSession;
+use App\Models\ClassroomSession;
 use App\Models\MainMaterialProgress;
 
 class RegisterController extends Controller
@@ -24,6 +26,19 @@ class RegisterController extends Controller
             session()->put('registration.classroom.students', Student::find($request->student_ids));
         }
 
+        if ($request->step == 5) {
+            $date = $request->date;
+            $startTime = Carbon::createFromFormat('H:i', $request->start_time);
+            $endTime = $startTime->copy()->addHours(2);
+
+            session()->put('registration.classroom.information', [
+                'start_time' => $startTime->format('H:i'),
+                'end_time' => $endTime->format('H:i'),
+                'date' => $date
+            ]);
+
+        }
+
         if ($request->has('faculty_id')) {
             session()->put('registration.classroom.faculty', Faculty::find($request->faculty_id));
         }
@@ -34,27 +49,45 @@ class RegisterController extends Controller
             session()->put('registration.classroom.lecturer', Lecturer::find($request->lecturer_id));
         }
 
+
         $classroom_routes = [
             '1' => 'choose-faculty',
             '2' => 'choose-course',
             '3' => 'choose-lecturer',
             '4' => 'choose-student',
-            '5' => 'confirmation'
+            '5' => 'classroom-information',
+            '6' => 'confirmation'
         ];
 
         $nextStep = $request->step + 1;
 
-        if($nextStep == 6){
-            $request->validate([
-                'schedule' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
-            ]);
+        if($nextStep == 7){
+            $classroomInformation = session()->get('registration.classroom.information');
+            $date = Carbon::parse($classroomInformation['date']);
+            $dayName = $date->format('l');
 
             $classroom = Classroom::create([
                 'lecturer_id' => session()->get('registration.classroom.lecturer')->id,
                 'course_id' => session()->get('registration.classroom.course')->id,
                 'class_code' => $request->classCode,
-                'schedule' => $request->schedule,
+                'schedule' => $dayName,
             ]);
+
+            $credit = session()->get('registration.classroom.course')->credit;
+
+
+            $startDate = Carbon::parse($classroomInformation['date']);
+            $courseSessions = session()->get('registration.classroom.course')->course_sessions;
+            for($i = 1; $i <= $credit * 6; $i++){
+                $sessionDate = $startDate->copy()->addDays(($i - 1) * 7);
+                ClassroomSession::create([
+                    'date' => $sessionDate,
+                    'start_time' => $classroomInformation['start_time'],
+                    'end_time' => $classroomInformation['end_time'],
+                    'classroom_id' => $classroom->id,
+                    'course_session_id' => $courseSessions[$i-1]->id
+                ]);
+            }
 
             $students = session()->get('registration.classroom.students');
             foreach($students as $student) {
@@ -91,7 +124,8 @@ class RegisterController extends Controller
             '2' => 'choose-course',
             '3' => 'choose-lecturer',
             '4' => 'choose-student',
-            '5' => 'confirmation'
+            '5' => 'classroom-information',
+            '6' => 'confirmation'
         ];
 
         $step = 1; // Default step
@@ -107,7 +141,8 @@ class RegisterController extends Controller
             2 => session()->has('registration.classroom.course'),
             3 => session()->has('registration.classroom.lecturer'),
             4 => session()->has('registration.classroom.student'),
-            5 => true,
+            5 => session()->has('registration.classroom.information'),
+            6 => true,
             default => false
         };
 
@@ -115,12 +150,13 @@ class RegisterController extends Controller
         $selectedCourse = session()->get('registration.classroom.course');
         $selectedLecturer = session()->get('registration.classroom.lecturer');
         $selectedStudents = session()->get('registration.classroom.students');
+        $classroomInformation = session()->get('registration.classroom.information');
 
         $courses = $selectedFaculty ? Course::where('faculty_id', $selectedFaculty->id)->get() : collect();
         $lecturers = $selectedFaculty ? Lecturer::where('faculty_id', $selectedFaculty->id)->get() : collect();
         $students = $selectedFaculty ? Student::where('faculty_id', $selectedFaculty->id)->get() : collect();
 
-        if($step == 5){
+        if($step == 6){
             $classCode = Classroom::generateClassCode($selectedFaculty->name);
         } else{
             $classCode = "DUMMY";
@@ -139,7 +175,8 @@ class RegisterController extends Controller
             'lecturers' => $lecturers,
             'students' => $students,
             'classCode' => $classCode,
-            'canProceed' => $canProceed
+            'canProceed' => $canProceed,
+            'classroomInformation' => $classroomInformation
         ]);
     }
 

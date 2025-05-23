@@ -1,14 +1,10 @@
 <?php
 
 use App\Models\Course;
-use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Classroom;
-use App\Models\Enrollment;
-use App\Models\ActivityLog;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\AdminController;

@@ -23,7 +23,7 @@ return new class extends Migration
                 table: 'courses',
                 indexName: 'classrooms_course_id'
             );
-            $table->string('class_id')->default(Str::random(30))->unique();
+            $table->uuid('class_id')->unique();
             $table->string('class_code');
             $table->string('schedule');
         });
