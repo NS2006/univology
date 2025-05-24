@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,5 +18,13 @@ class ClassroomSession extends Model
 
     public function course_session(): BelongsTo{
         return $this->belongsTo(CourseSession::class);
+    }
+
+    protected static function boot(){
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->classroom_session_id = Str::uuid();
+        });
     }
 }

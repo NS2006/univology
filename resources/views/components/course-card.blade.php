@@ -1,9 +1,9 @@
 @student
-<a href="/classroom/{{ $enrollment->classroom->class_id }}">
+<a href="/classroom/{{ $enrollment->classroom->class_id }}/session/{{ $enrollment->classroom->classroom_sessions[0]->classroom_session_id }}">
 @endstudent
 
 @lecturer
-<a href="/classroom/{{ $classroom->class_id }}">
+<a href="/classroom/{{ $classroom->class_id }}/session/{{ $classroom->classroom_sessions[0]->classroom_session_id }}">
 @endlecturer
 
     <div class="group mb-6 p-6 dark:bg-white rounded-xl dark:shadow-md hover:shadow-lg transition-all duration-300 bg-gray-800 border-gray-700 cursor-pointer relative overflow-hidden">
@@ -70,23 +70,22 @@
 
 
         @lecturer
-        <!-- Course Header -->
-        <div class="flex items-start justify-between mb-4 relative z-10">
-            <div>
-                <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider dark:text-blue-800 uppercase dark:bg-blue-100 rounded-full bg-blue-900 text-blue-200">
-                    {{ $classroom->course->course_id }}
-                </span>
-                <h2 class="mt-2 text-xl font-bold dark:text-gray-800 dark:group-hover:text-blue-600 transition-colors">
-                    {{ $classroom->course->name }}
-                </h2>
-                <p class="text-sm dark:text-gray-400 dark:group-hover:text-gray-700 transition-colors">
+            <!-- Course Header -->
+            <div class="flex items-start justify-between mb-4 relative z-10">
+                <div>
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider dark:text-blue-800 uppercase dark:bg-blue-100 rounded-full bg-blue-900 text-blue-200">
+                        {{ $classroom->course->course_id }}
+                    </span>
+                    <h2 class="mt-2 text-xl font-bold dark:text-gray-800 dark:group-hover:text-blue-600 transition-colors">
+                        {{ $classroom->course->name }}
+                    </h2>
+                    <p class="text-sm dark:text-gray-400 dark:group-hover:text-gray-700 transition-colors">
                     Class: {{ $classroom->class_code }}
                 </p>
             </div>
         </div>
 
         <!-- Progress Section -->
-        <!-- Enhanced Stats Section -->
         <div class="mt-6 grid grid-cols-2 gap-4 relative z-10">
             <!-- Students Card -->
             <div class="p-3 dark:bg-blue-50 rounded-lg group-hover:shadow-sm transition-shadow">

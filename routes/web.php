@@ -5,6 +5,8 @@ use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Classroom;
+use App\Models\CourseSession;
+use App\Models\ClassroomSession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\AdminController;
@@ -31,12 +33,15 @@ Route::get('/register', function () {
 
 Route::get('/courses', [CourseController::class, 'index'])->middleware('user');
 
-Route::get('/classroom/{classroom:class_id}', function(Classroom $classroom){
-    return view('classroom', [
-        'title' => $classroom->class_code . ' ' . $classroom->course->name,
-        'classroom' => $classroom
-    ]);
-});
+Route::prefix('/classroom/{classroom:class_id}')->group(function () {
+    Route::get('/session/{course_session:session_id}', function(Classroom $classroom, ClassroomSession $classroomSession){
+        return view('classroom', [
+            'title' => $classroom->class_code . ' ' . $classroom->course->name,
+            'classroom' => $classroom,
+            'classroomSession' => $classroomSession
+        ]);
+    });
+})->middleware('user');
 
 Route::middleware(['clear.registration'])->group(function () {
     Route::prefix('register/classroom')->group(function () {
@@ -54,7 +59,7 @@ Route::middleware(['clear.registration'])->group(function () {
         // Store data selection
         Route::post('/store-data', [RegisterController::class, 'courseStoreData'])->middleware('admin')->name('register.course.store-data');
     });
-});
+})->middleware('admin');
 
 
 Route::get('/dashboard/admin', [DashboardController::class, 'indexAdmin'])->name('dashboard_admin')->middleware('admin');

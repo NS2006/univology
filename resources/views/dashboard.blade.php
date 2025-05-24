@@ -385,18 +385,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Section 3 -->
-        <div class="w-full md:w-1/3 p-4 h-[70vh]">
-            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
-                <h3 class="text-2xl font-bold text-center">Today's Logs</h3>
-                <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
-                <div class="overflow-y-auto flex-1">
-                    <p>contentt</p>
-                </div>
-            </div>
-        </div>
-    </div>
     @endlecturer
 
     {{-- Student --}}
@@ -437,17 +425,70 @@
             </div>
           </div>
         </div>
+    @endstudent
 
-        <!-- Section 3 -->
+    @user
+        <!-- Upcoming Class Section -->
         <div class="w-full md:w-1/3 p-4 h-[70vh]">
-            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
-                <h3 class="text-2xl font-bold text-center">Today's Logs</h3>
-                <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
-                <div class="overflow-y-auto flex-1">
-                    <p>contentt</p>
+            <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-white shadow-sm dark:border-gray-700">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-900">Upcoming Class</h3>
+                    <hr class="my-4 h-px bg-gray-300 dark:bg-gray-400 border-0">
+                </div>
+
+                <div class="overflow-y-auto flex-1 space-y-6">
+                    <!-- Class Card -->
+                    <div class="dark:bg-white rounded-lg p-5 shadow-sm border dark:border-gray-200">
+                        <div class="flex items-start mb-3">
+                            <div class="bg-blue-100 dark:bg-blue-200 p-3 rounded-lg mr-4">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800">{{ $topSession->classroom->course->name }}</h4>
+                                <p class="text-sm text-gray-600">Code: {{ $topSession->classroom->class_code }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Session Details -->
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500">Session</p>
+                                <p class="font-medium">{{ $topSession->course_session->session_number }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-gray-500">Date</p>
+                                <p class="font-medium">{{ \Carbon\Carbon::parse($topSession->date)->format('D, M j') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-gray-500">Time</p>
+                                <p class="font-medium">
+                                    {{ \Carbon\Carbon::parse($topSession->start_time)->format('h:i A') }} -
+                                    {{ \Carbon\Carbon::parse($topSession->end_time)->format('h:i A') }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-gray-500">Lecturer</p>
+                                <p class="font-medium">{{ $topSession->classroom->lecturer->user->name }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <a href="/classroom/{{ $topSession->classroom->class_id }}/session/{{ $topSession->classroom_session_id }}" class="mt-6 block">
+                            <button class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center space-x-2 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <span>View Classroom</span>
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    @endstudent
+    @enduser
 </x-layout>
