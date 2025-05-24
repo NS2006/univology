@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Enrollment;
 use App\Models\ActivityLog;
+use App\Models\AdminHistoryLog;
 use App\Models\ClassroomSession;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,6 +62,7 @@ class DashboardController extends Controller
             'courses' => Course::all(),
             'logs' => ActivityLog::whereDate('created_at', now()->toDateString())->latest()->get(),
             'reports' => Report::orderByRaw('status ASC')->latest()->get(),
+            'histories' => AdminHistoryLog::orderByRaw('created_at DESC')->latest()->get(),
         ]);
     }
 }

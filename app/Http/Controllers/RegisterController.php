@@ -13,6 +13,7 @@ use App\Models\Enrollment;
 use App\Models\MainMaterial;
 use Illuminate\Http\Request;
 use App\Models\CourseSession;
+use App\Models\AdminHistoryLog;
 use App\Models\ClassroomSession;
 use App\Models\MainMaterialProgress;
 
@@ -26,9 +27,11 @@ class RegisterController extends Controller
         $nextStep = $request->step + 1;
 
         if($nextStep == 2){
-            Faculty::create([
+            $faculty = Faculty::create([
                 'name' => $request->faculty_name
             ]);
+
+            AdminHistoryLog::createHistory('New Faculty called ' . $faculty->name . ' has been created successfully');
 
             return redirect()->route('register.faculty.faculty_route', [
                 'faculty_route' => 'faculty-information'
@@ -99,12 +102,16 @@ class RegisterController extends Controller
                     'email' => Student::getEmail($user_name),
                     'faculty_id' => session('registration.user.faculty')->id
                 ]);
+
+                AdminHistoryLog::createHistory('New Student named ' . $user->name . ' - ' . $user->student->student_id . ' has been created successfully');
             } else{
                 $user->lecturer()->create([
                     'lecturer_id' => Lecturer::generateLecturerId(),
                     'email' => Lecturer::getEmail($user_name),
                     'faculty_id' => session('registration.user.faculty')->id
                 ]);
+
+                AdminHistoryLog::createHistory('New Lecturer named ' . $user->name . ' - ' . $user->lecturer->lecturer_id . ' has been created successfully');
             }
 
             session()->forget('registration.user');
@@ -264,6 +271,9 @@ class RegisterController extends Controller
                 }
             }
 
+
+            AdminHistoryLog::createHistory('New Classroom ' . $classroom->class_code . ' - ' . $classroom->course->name . ' by ' . $classroom->lecturer->lecturer_id . ' - ' . $classroom->lecturer->user->name . ' has been created successfully');
+
             session()->forget('registration.classroom');
 
             return redirect()->route('register.classroom.classroom_route', [
@@ -409,6 +419,8 @@ class RegisterController extends Controller
                     'course_session_id' => $session->id
                 ]);
             }
+
+            AdminHistoryLog::createHistory('New Course ' . $course->course_id . ' - ' . $course->name . ' from Faculty ' . $course->faculty->name . ' has been created successfully');
 
             session()->forget('registration.course');
 
