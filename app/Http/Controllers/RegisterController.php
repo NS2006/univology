@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Student;
@@ -17,6 +18,164 @@ use App\Models\MainMaterialProgress;
 
 class RegisterController extends Controller
 {
+    public function facultyStoreData (Request $request) {
+        $faculty_routes = [
+            '1' => 'faculty-information',
+        ];
+
+        $nextStep = $request->step + 1;
+
+        if($nextStep == 2){
+            Faculty::create([
+                'name' => $request->faculty_name
+            ]);
+
+            return redirect()->route('register.faculty.faculty_route', [
+                'faculty_route' => 'faculty-information'
+            ])->with('registration.faculty.success', 'New Faculty has been created successfully!');
+        }
+
+        return redirect()->route('register.faculty.faculty_route', [
+            'faculty_route' => $faculty_routes[$nextStep]
+        ]);
+    }
+
+    public function facultyRoute ($faculty_route) {
+        $faculty_routes = [
+            '1' => 'faculty-information',
+        ];
+
+        $step = 1; // Default step
+        foreach($faculty_routes as $key => $route) {
+            if($route == $faculty_route) {
+                $step = $key;
+                break;
+            }
+        }
+
+        return view('register-faculty', [
+            'title' => 'Univology | Register',
+            'step' => (int)$step,
+            'faculty_routes' => $faculty_routes
+        ]);
+    }
+
+    public function userStoreData (Request $request) {
+        if ($request->step == 2) {
+            $request->validate([
+                'role' => 'required|in:student,lecturer',
+            ]);
+            session()->put('registration.user.role', $request->role);
+            session()->put('registration.user.user_name', $request->user_name);
+        }
+
+        if ($request->has('faculty_id')) {
+            session()->put('registration.user.faculty', Faculty::find($request->faculty_id));
+        }
+
+        $user_routes = [
+            '1' => 'choose-faculty',
+            '2' => 'user-information',
+            '3' => 'confirmation'
+        ];
+
+        $nextStep = $request->step + 1;
+
+        if($nextStep == 4){
+            $user_name = session('registration.user.user_name');
+            $role_id = session('registration.user.role') == 'student' ? 1 : 2;
+
+            $user = User::create([
+                'name'=> $user_name,
+                'password' => bcrypt(User::getDefaultPassword($user_name)),
+                'role_id'=> $role_id
+            ]);
+
+            // Student n Lecturer
+
+            if($role_id == 1){
+                $user->student()->create([
+                    'student_id' => $request->user_id,
+                    'email' => Student::getEmail($user_name),
+                    'faculty_id' => session('registration.user.faculty')->id
+                ]);
+            } else{
+                $user->lecturer()->create([
+                    'lecturer_id' => Lecturer::generateLecturerId(),
+                    'email' => Lecturer::getEmail($user_name),
+                    'faculty_id' => session('registration.user.faculty')->id
+                ]);
+            }
+
+            session()->forget('registration.user');
+
+            return redirect()->route('register.user.user_route', [
+                'user_route' => 'choose-faculty'
+            ])->with('registration.user.success', 'New User has been created successfully!');
+        }
+
+        return redirect()->route('register.user.user_route', [
+            'user_route' => $user_routes[$nextStep]
+        ]);
+    }
+
+    public function userRoute ($user_route) {
+        $user_routes = [
+            '1' => 'choose-faculty',
+            '2' => 'user-information',
+            '3' => 'confirmation'
+        ];
+
+        $step = 1; // Default step
+        foreach($user_routes as $key => $route) {
+            if($route == $user_route) {
+                $step = $key;
+                break;
+            }
+        }
+
+        $faculties = Faculty::all();
+
+        $canProceed = match($step) {
+            1 => session()->has('registration.classroom.faculty'),
+            default => true
+        };
+
+
+        $role = session()->get('registration.user.role');
+        $user_name = session()->get('registration.user.user_name');
+        $selectedFaculty = session()->get('registration.user.faculty');
+        $user_id = "";
+        $email_name  = "";
+        $default_password = "";
+
+
+        if($step == 3){
+            if($role == 'student'){
+                $user_id = Student::generateStudentId();
+                $email_name = Student::getEmail($user_name);
+            } else{
+                $user_id = Lecturer::generateLecturerId();
+                $email_name = Lecturer::getEmail($user_name);
+            }
+            $default_password = User::getDefaultPassword($user_name);
+        }
+
+        return view('register-user', [
+            'title' => 'Univology | Register',
+            'step' => (int)$step,
+            'user_routes' => $user_routes,
+            'canProceed' => $canProceed,
+            'faculties' => $faculties,
+            'selectedFaculty' => $selectedFaculty,
+            'role' => $role,
+            'user_name' => $user_name,
+            'user_id' => $user_id,
+            'email_name' => $email_name,
+            'default_password' => $default_password
+        ]);
+    }
+
     public function classroomStoreData (Request $request) {
         if ($request->step == 4) {
             $request->validate([
@@ -48,7 +207,6 @@ class RegisterController extends Controller
         if ($request->has('lecturer_id')) {
             session()->put('registration.classroom.lecturer', Lecturer::find($request->lecturer_id));
         }
-
 
         $classroom_routes = [
             '1' => 'choose-faculty',
@@ -159,7 +317,7 @@ class RegisterController extends Controller
         if($step == 6){
             $classCode = Classroom::generateClassCode($selectedFaculty->name);
         } else{
-            $classCode = "DUMMY";
+            $classCode = "";
         }
 
         return view('register-classroom', [

@@ -26,6 +26,14 @@ class ClearRegistration
             session()->forget('registration.course');
         }
 
+        if (session()->has('registration.user') && !Route::is('register.user.*')) {
+            session()->forget('registration.user');
+        }
+
+        if (session()->has('registration.faculty') && !Route::is('register.faculty.*')) {
+            session()->forget('registration.faculty');
+        }
+
         return $next($request);
 
         // return $response;

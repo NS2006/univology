@@ -59,6 +59,22 @@ Route::middleware(['clear.registration'])->group(function () {
         // Store data selection
         Route::post('/store-data', [RegisterController::class, 'courseStoreData'])->middleware('admin')->name('register.course.store-data');
     });
+
+    Route::prefix('register/user')->group(function () {
+        // Show step
+        Route::get('/{user_route}', [RegisterController::class, 'userRoute'])->middleware('admin')->name('register.user.user_route');
+
+        // Store data selection
+        Route::post('/store-data', [RegisterController::class, 'userStoreData'])->middleware('admin')->name('register.user.store-data');
+    });
+
+    Route::prefix('register/faculty')->group(function () {
+        // Show step
+        Route::get('/{faculty_route}', [RegisterController::class, 'facultyRoute'])->middleware('admin')->name('register.faculty.faculty_route');
+
+        // Store data selection
+        Route::post('/store-data', [RegisterController::class, 'facultyStoreData'])->middleware('admin')->name('register.faculty.store-data');
+    });
 })->middleware('admin');
 
 

@@ -7,10 +7,10 @@
     <div class="flex flex-wrap min-h-[70vh] mb-2.5">
         <!-- Section 1 -->
         <div class="w-full md:w-1/3 p-4 h-[70vh]">
-          <div class="border rounded-lg p-6 h-full">
-            <h3 class="text-xl font-bold mb-4">Section 1</h3>
-            <p>Content goes here</p>
-          </div>
+           <div class="border rounded-lg p-6 h-full flex flex-col dark:bg-gray-200 dark:border-gray-300">
+                <h3 class="text-2xl font-bold text-center">Admin's Logs</h3>
+                <hr class="my-4 h-px bg-gray-500 dark:bg-gray-600 border-0">
+            </div>
         </div>
 
         <!-- Section 2 -->

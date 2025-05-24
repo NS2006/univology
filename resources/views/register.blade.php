@@ -6,6 +6,10 @@
 
     <a href="/register/course/choose-faculty">Register Course</a>
 
+    <a href="/register/user/choose-faculty">Register User</a>>
+
+    <a href="/register/faculty/faculty-information">Register Faculty</a>
+
     <h1>Faculty</h1>
     <ul>
     @foreach ($faculties as $faculty)
