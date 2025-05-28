@@ -1,11 +1,6 @@
 <?php
 
-use App\Models\Course;
-use App\Models\Faculty;
-use App\Models\Student;
-use App\Models\Lecturer;
 use App\Models\Classroom;
-use App\Models\CourseSession;
 use App\Models\ClassroomSession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MiscController;
@@ -14,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ViewAllController;
 
 Route::get('/', function(){
     return view('login', ['title' => 'Univology | Login']);
@@ -21,15 +17,19 @@ Route::get('/', function(){
 
 Route::get('/dashboard', [DashboardController::class, 'indexUser'])->name('dashboard')->middleware('user');
 
-Route::get('/register', function () {
-    return view('register', [
-        'title' => 'Univology | Register',
-        'faculties' => Faculty::all(),
-        'students' => Student::all(),
-        'lecturers' => Lecturer::all(),
-        'courses' => Course::all()
-    ]);
-})->middleware('admin');
+Route::get('/administration', [AdminController::class, 'indexAdministration'])->middleware('admin');
+
+Route::prefix('/view-all')->group(function(){
+    Route::get('/courses', [ViewAllController::class, 'indexViewCourses'])->middleware('admin');
+
+    Route::get('/lecturers', [ViewAllController::class, 'indexViewLecturers'])->middleware('admin');
+
+    Route::get('/students', [ViewAllController::class, 'indexViewStudents'])->middleware('admin');
+
+    Route::get('/faculties', [ViewAllController::class, 'indexViewFaculties'])->middleware('admin');
+
+    Route::get('/classrooms', [ViewAllController::class, 'indexViewClassrooms'])->middleware('admin');
+});
 
 Route::get('/courses', [CourseController::class, 'index'])->middleware('user');
 
@@ -45,34 +45,26 @@ Route::prefix('/classroom/{classroom:class_id}')->group(function () {
 
 Route::middleware(['clear.registration'])->group(function () {
     Route::prefix('register/classroom')->group(function () {
-        // Show step
         Route::get('/{classroom_route}', [RegisterController::class, 'classroomRoute'])->middleware('admin')->name('register.classroom.classroom_route');
 
-        // Store data selection
         Route::post('/store-data', [RegisterController::class, 'classroomStoreData'])->middleware('admin')->name('register.classroom.store-data');
     });
 
     Route::prefix('register/course')->group(function () {
-        // Show step
         Route::get('/{course_route}', [RegisterController::class, 'courseRoute'])->middleware('admin')->name('register.course.course_route');
 
-        // Store data selection
         Route::post('/store-data', [RegisterController::class, 'courseStoreData'])->middleware('admin')->name('register.course.store-data');
     });
 
     Route::prefix('register/user')->group(function () {
-        // Show step
         Route::get('/{user_route}', [RegisterController::class, 'userRoute'])->middleware('admin')->name('register.user.user_route');
 
-        // Store data selection
         Route::post('/store-data', [RegisterController::class, 'userStoreData'])->middleware('admin')->name('register.user.store-data');
     });
 
     Route::prefix('register/faculty')->group(function () {
-        // Show step
         Route::get('/{faculty_route}', [RegisterController::class, 'facultyRoute'])->middleware('admin')->name('register.faculty.faculty_route');
 
-        // Store data selection
         Route::post('/store-data', [RegisterController::class, 'facultyStoreData'])->middleware('admin')->name('register.faculty.store-data');
     });
 })->middleware('admin');

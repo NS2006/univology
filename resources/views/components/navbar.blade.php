@@ -98,7 +98,7 @@
         </li>
 
         <li>
-            <x-nav-link href='/register' :active="request()->is('register')">Register</x-nav-link>
+            <x-nav-link href='/administration' :active="request()->is('administration')">Administration</x-nav-link>
         </li>
         @endadmin
 

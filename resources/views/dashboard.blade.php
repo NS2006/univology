@@ -17,82 +17,71 @@
                 <!-- Logs Content - Scrollable Area -->
                 <div class="overflow-y-auto flex-1 space-y-4">
                     @forelse ($histories as $history)
-    <!-- Log Entry Card -->
-    <div class="bg-white dark:bg-gray-100 rounded-lg p-4 mb-3 shadow-sm border border-gray-200 dark:border-gray-300 hover:shadow-md transition-shadow">
-        <div class="flex items-start">
-            <!-- Log Content -->
-            <div class="flex-1">
-                <!-- Action Type Badge -->
-                @php
-                    $actionType = strtolower(explode(' ', $history->description)[1]) ?? 'action';
-                    $colorMap = [
-                        'student' => 'bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-900',
-                        'classroom' => 'bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900',
-                        'course' => 'bg-purple-100 text-purple-800 dark:bg-purple-200 dark:text-purple-900',
-                        'lecturer' => 'bg-amber-100 text-amber-800 dark:bg-amber-200 dark:text-amber-900',
-                        'faculty' => 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900',
-                    ];
-                    $badgeColor = $colorMap[$actionType] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-200 dark:text-gray-900';
-                @endphp
+                        <!-- Log Entry Card -->
+                        <div class="bg-white dark:bg-gray-100 rounded-lg p-4 mb-3 shadow-sm border border-gray-200 dark:border-gray-300 hover:shadow-md transition-shadow">
+                            <div class="flex items-start">
+                                <!-- Log Content -->
+                                <div class="flex-1">
+                                    <!-- Action Type Badge -->
+                                    @php
+                                        $actionType = strtolower(explode(' ', $history->description)[1]) ?? 'action';
+                                        $colorMap = [
+                                            'student' => 'bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-900',
+                                            'classroom' => 'bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900',
+                                            'course' => 'bg-purple-100 text-purple-800 dark:bg-purple-200 dark:text-purple-900',
+                                            'lecturer' => 'bg-amber-100 text-amber-800 dark:bg-amber-200 dark:text-amber-900',
+                                            'faculty' => 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900',
+                                        ];
+                                        $badgeColor = $colorMap[$actionType] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-200 dark:text-gray-900';
+                                    @endphp
 
-                <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full mb-2 {{ $badgeColor }}">
-                    {{ ucfirst($actionType) }} created
-                </span>
+                                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full mb-2 {{ $badgeColor }}">
+                                        {{ ucfirst($actionType) }} created
+                                    </span>
 
-                <!-- Main Description -->
-                <p class="text-sm font-medium text-gray-800 dark:text-gray-700 mb-2">
-                    @php
-                        // Extract the key parts from the description
-                        $parts = explode(' - ', $history->description);
-                        $namePart = $parts[0] ?? '';
-                        $idPart = $parts[1] ?? '';
-                        $name = preg_replace('/^New (Student|Classroom|Course|Lecturer|Faculty) named? /', '', $namePart);
-                    @endphp
+                                    <!-- Main Description -->
+                                    <p class="text-sm font-medium text-gray-800 dark:text-gray-700 mb-2">
+                                        @php
+                                            // Extract the key parts from the description
+                                            $parts = explode(' - ', $history->description);
+                                            $namePart = $parts[0] ?? '';
+                                            $idPart = $parts[1] ?? '';
+                                            $name = preg_replace('/^New (Student|Classroom|Course|Lecturer|Faculty) named? /', '', $namePart);
+                                        @endphp
 
-                    <span class="font-semibold">{{ $name }}</span>
-                    @if($idPart)
-                        <span class="text-gray-500 dark:text-gray-600 font-mono text-xs bg-gray-100 dark:bg-gray-200 px-1.5 py-0.5 rounded ml-1">
-                            {{ explode(' ', $idPart)[0] }}
-                        </span>
-                    @endif
-                </p>
+                                        <span class="font-semibold">{{ $name }}</span>
+                                        @if($idPart)
+                                            <span class="text-gray-500 dark:text-gray-600 font-mono text-xs bg-gray-100 dark:bg-gray-200 px-1.5 py-0.5 rounded ml-1">
+                                                {{ explode(' ', $idPart)[0] }}
+                                            </span>
+                                        @endif
+                                    </p>
 
-                <!-- Timestamp -->
-                <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {{ $history->created_at->diffForHumans() }} •
-                    {{ $history->created_at->format('M j, Y \a\t h:i A') }}
-                </div>
-            </div>
+                                    <!-- Timestamp -->
+                                    <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {{ $history->created_at->diffForHumans() }} •
+                                        {{ $history->created_at->format('M j, Y \a\t h:i A') }}
+                                    </div>
+                                </div>
 
-            <!-- Status Icon -->
-            <div class="ml-2 p-1 text-green-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-        </div>
-    </div>
-@empty
-                        <!-- Empty State -->
+                                <!-- Status Icon -->
+                                <div class="ml-2 p-1 text-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                     @empty
                         <div class="flex flex-col items-center justify-center h-full p-8 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-gray-300 dark:text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-
-                            <h3 class="text-xl font-bold text-gray-500 dark:text-gray-600 mb-2">No Activity Logs</h3>
-                            <p class="text-gray-400 dark:text-gray-500 max-w-md mx-auto mb-6">
-                                Admin activities will appear here once actions are performed in the system.
-                            </p>
-
-                            <button class="px-4 py-2 bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 rounded-lg border border-blue-100 dark:border-gray-600 hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                Refresh Logs
-                            </button>
+                            <h3 class="text-xl font-bold text-gray-500 dark:text-gray-600 mb-2">No Admin's Activity Found</h3>
+                            <p class="text-gray-400 dark:text-gray-500">There are no admin's activity to display at this time.</p>
                         </div>
                     @endforelse
                 </div>

@@ -200,7 +200,8 @@ class RegisterController extends Controller
             session()->put('registration.classroom.information', [
                 'start_time' => $startTime->format('H:i'),
                 'end_time' => $endTime->format('H:i'),
-                'date' => $date
+                'date' => $date,
+                'online_link' => $request->online_link
             ]);
 
         }
@@ -236,6 +237,7 @@ class RegisterController extends Controller
                 'course_id' => session()->get('registration.classroom.course')->id,
                 'class_code' => $request->classCode,
                 'schedule' => $dayName,
+                'online_link' => $classroomInformation['online_link']
             ]);
 
             $credit = session()->get('registration.classroom.course')->credit;

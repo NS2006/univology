@@ -152,6 +152,11 @@
                         <h3 class="text-lg font-medium mb-2">Start Time:</h3>
                         <input type="time" alt=""name="start_time" alt=""id="start_time" alt=""class="p-3 border rounded-lg bg-blue-50 w-full font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500" alt=""min="08:00" alt=""max="20:00" alt=""step="1800" alt=""value="{{ old('start_time', '08:00') }}">
                     </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Online Link:</h3>
+                        <input type="text" name="online_link" id="online_link" placeholder="Input Online Link" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required value="{{ \App\Models\ClassroomSession::getDummyOnlineLink() }}">
+                    </div>
                 @endif
 
                 @if ($step == 6)
@@ -183,6 +188,13 @@
                         <h3 class="text-lg font-medium mb-2">End Time:</h3>
                         <div class="p-4 border rounded-lg bg-blue-50">
                             <p class="font-medium">{{ $classroomInformation['end_time'] }} GMT+7</p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Online Link:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $classroomInformation['online_link'] }}</p>
                         </div>
                     </div>
 

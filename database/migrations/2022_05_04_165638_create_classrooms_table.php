@@ -26,6 +26,7 @@ return new class extends Migration
             $table->uuid('class_id')->unique();
             $table->string('class_code');
             $table->string('schedule');
+            $table->text('online_link');
         });
     }
 

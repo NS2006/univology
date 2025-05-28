@@ -20,7 +20,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->uuid('classroom_session_id')->unique();
             $table->integer('is_finished')->default(0);
-            
+
             $table->foreignId('classroom_id')->constrained(
                 table: 'classrooms',
                 indexName: 'classroom_sessions_classroom_id'

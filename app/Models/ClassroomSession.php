@@ -20,6 +20,10 @@ class ClassroomSession extends Model
         return $this->belongsTo(CourseSession::class);
     }
 
+    public static function getDummyOnlineLink(){
+        return 'https://guthib.com/';
+    }
+
     protected static function boot(){
         parent::boot();
 

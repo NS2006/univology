@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Course;
 use App\Models\Report;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Classroom;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Number;
@@ -70,6 +72,17 @@ class AdminController extends Controller
         return redirect('/dashboard/admin')->with([
             'success-solve-report' => true,
             'report-id' => $report->id
+        ]);
+    }
+
+    public function indexAdministration () {
+        return view('administration', [
+            'title' => 'Univology | Administration',
+            'faculties' => Faculty::all(),
+            'students' => Student::all(),
+            'lecturers' => Lecturer::all(),
+            'courses' => Course::all(),
+            'classrooms' => Classroom::all()
         ]);
     }
 }

@@ -22,7 +22,8 @@ class ClassroomSeeder extends Seeder
             'lecturer_id' => 1,
             'course_id' => 1,
             'class_code' => Classroom::generateClassCode(Faculty::where('id', '=', 1)->first()->name),
-            'schedule' => 'monday',
+            'schedule' => 'Monday',
+            'online_link' => ClassroomSession::getDummyOnlineLink()
         ]);
 
         $credit = $classroom->course->credit;
