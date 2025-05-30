@@ -8,14 +8,19 @@ use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Material;
 use App\Models\Classroom;
 use App\Models\Enrollment;
 use App\Models\MainMaterial;
 use Illuminate\Http\Request;
 use App\Models\CourseSession;
+use App\Models\ScoreComponent;
 use App\Models\AdminHistoryLog;
 use App\Models\ClassroomSession;
+use App\Models\MaterialProgress;
 use App\Models\MainMaterialProgress;
+use Illuminate\Support\Facades\Validator;
+use App\Models\StudentScore;
 
 class RegisterController extends Controller
 {
@@ -265,11 +270,19 @@ class RegisterController extends Controller
 
                 foreach($classroom->course->course_sessions as $course_session){
                     foreach($course_session->main_materials as $main_material){
-                        MainMaterialProgress::create([
+                        MaterialProgress::create([
                             'enrollment_id' => $enrollment->id,
-                            'main_material_id' => $main_material->id
+                            'material_id' => $main_material->material->id
                         ]);
                     }
+                }
+
+                $score_components = $classroom->course->score_components;
+                foreach($score_components as $score_component){
+                    StudentScore::create([
+                        'score_component_id' => $score_component->id,
+                        'enrollment_id' => $enrollment->id
+                    ]);
                 }
             }
 
@@ -352,8 +365,24 @@ class RegisterController extends Controller
 
     public function courseStoreData (Request $request) {
         if ($request->step == 2) {
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'course_name' => 'required|min:2',
+            ]);
+
+            // Add custom validation rule for total weight = 100
+            $validator->after(function ($validator) use ($request) {
+                $total = $request->assignment + $request->mid_exam + $request->final_exam;
+                if ($total != 100) {
+                    $validator->errors()->add('weight', 'The sum of all score component weights must equal 100%.');
+                }
+            });
+
+            $validator->validate();
+
+            session()->put('registration.course.weight', [
+                'assignment' => $request->assignment,
+                'mid_exam' => $request->mid_exam,
+                'final_exam' => $request->final_exam,
             ]);
         }
 
@@ -383,7 +412,8 @@ class RegisterController extends Controller
             for ($i = 1; $i <= session()->get('registration.course.course_credit') * 6; $i++) {
                 $sessions[] = [
                     'title' => $request->get("course_session_{$i}_title"),
-                    'main_material' => $request->get("course_session_{$i}_main_material")
+                    'topic' => $request->get("course_session_{$i}_topic"),
+                    'link' => $request->get("course_session_{$i}_link")
                 ];
             }
 
@@ -416,9 +446,25 @@ class RegisterController extends Controller
                     'course_id' => $course->id
                 ]);
 
+                $material = Material::create([
+                    'link' => $sessions[$curr-1]['link'],
+                    'topic' => $sessions[$curr-1]['topic']
+                ]);
+
                 MainMaterial::create([
-                    'link' => $sessions[$curr-1]['main_material'],
+                    'material_id' => $material->id,
                     'course_session_id' => $session->id
+                ]);
+            }
+
+            $weight_names = ['Assignment', 'Mid Exam', 'Final Exam'];
+            $weight_keys = ['assignment', 'mid_exam', 'final_exam'];
+
+            for($i = 0; $i < count($weight_keys); $i++){
+                ScoreComponent::create([
+                    'name' => $weight_names[$i],
+                    'weight' => session()->get('registration.course.weight')[$weight_keys[$i]],
+                    'course_id' => $course->id
                 ]);
             }
 
@@ -462,6 +508,7 @@ class RegisterController extends Controller
         $courseCredit = session()->get('registration.course.course_credit');
         $sessions = session()->get('registration.course.sessions');
         $selectedFaculty = session()->get('registration.course.faculty');
+        $weight = session()->get('registration.course.weight');
 
         if($step == 2){
             $courseId = Course::generatecourseId($selectedFaculty->name);
@@ -473,10 +520,12 @@ class RegisterController extends Controller
 
         if($step == 3 && session()->has("registration.course.fill_session")) {
             $sessionTitle = CourseSession::getDummyTitle();
-            $sessionMaterialLink = MainMaterial::getDummyLink();
+            $sessionLink = Material::getDummyLink();
+            $sessionTopic = Material::getDummyTopic();
         } else{
             $sessionTitle = "";
-            $sessionMaterialLink = "";
+            $sessionLink = "";
+            $sessionTopic = "";
         }
 
         $canProceed = match($step) {
@@ -494,9 +543,11 @@ class RegisterController extends Controller
             'courseName' => $courseName,
             'courseCredit' => $courseCredit,
             'totalSession' => $totalSession,
-            'sessionMaterialLink' => $sessionMaterialLink,
+            'sessionLink' => $sessionLink,
             'sessionTitle' => $sessionTitle,
+            'sessionTopic' => $sessionTopic,
             'sessions' => $sessions,
+            'weight' => $weight,
             'canProceed' => $canProceed
         ]);
     }

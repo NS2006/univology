@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained(
                 table: 'roles',
                 indexName: 'users_role_id'
-            )->onDelete('cascade')->onUpdate('cascade');
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Course;
-use Illuminate\Support\Str;
 use App\Models\MainMaterial;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,9 +22,14 @@ class CourseSession extends Model
                 'title' => CourseSession::getDummyTitle() . ' ' . $i,
             ]);
 
+            $material = Material::create([
+                'link' => Material::getDummyLink(),
+                'topic' => Material::getDummyTopic()
+            ]);
+
             MainMaterial::create( [
-                'link' => MainMaterial::getDummyLink(),
                 'course_session_id' => $courseSession->id,
+                'material_id' => $material->id
             ]);
         }
     }

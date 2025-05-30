@@ -52,4 +52,8 @@ class Course extends Model
     public function course_sessions(): HasMany{
         return $this->hasMany(CourseSession::class);
     }
+
+    public function score_components(): HasMany{
+        return $this->hasMany(ScoreComponent::class);
+    }
 }

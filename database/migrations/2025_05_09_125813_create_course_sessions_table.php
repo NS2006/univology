@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained(
                 table: 'courses',
                 indexName: 'course_session_course_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }

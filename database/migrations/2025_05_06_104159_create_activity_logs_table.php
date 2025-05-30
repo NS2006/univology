@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained(
                 table: 'users',
                 indexName: 'login_activities_user_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

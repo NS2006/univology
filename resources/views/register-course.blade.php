@@ -87,15 +87,39 @@
 
                     <div class="col-span-full">
                         <label class="text-lg font-medium mb-2" for="course_name">Course Name:</label>
-                        <input type="text" name="course_name" id="course_name" placeholder="Input Course Name" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required>
+                        <input type="text" name="course_name" id="course_name" placeholder="Input Course Name" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required value="{{ old('course_name') }}">
+                        @error('course_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('course_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
 
                     <div class="col-span-full">
                         <label class="text-lg font-medium mb-2" for="course_credit">Course Credit:</label>
-                        <input type="number" name="course_credit" id="course_credit" placeholder="Input Course Credit" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required min="1">
+                        <input type="number" name="course_credit" id="course_credit" placeholder="Input Course Credit" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required min="1" value="{{ old('course_credit') }}">
+                    </div>
+
+                    <div class="col-span-full">
+                        <label class="text-lg font-medium mb-2" for="assignment">Assignment Weight (%)</label>
+                        <input type="number" name="assignment" id="assignment" placeholder="Input Assignment Weight" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required min="1" max="100" value="{{ old('assignment') }}">
+                        @if ($errors->has('weight'))
+                            <p class="mt-1 text-sm text-red-600">{{ $errors->first('weight') }}</p>
+                        @endif
+                    </div>
+
+                    <div class="col-span-full">
+                        <label class="text-lg font-medium mb-2" for="mid_exam">Mid Exam Weight (%):</label>
+                        <input type="number" name="mid_exam" id="mid_exam" placeholder="Input Mid Exam Weight" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required min="1" max="100" value="{{ old('mid_exam') }}">
+                        @if ($errors->has('weight'))
+                            <p class="mt-1 text-sm text-red-600">{{ $errors->first('weight') }}</p>
+                        @endif
+                    </div>
+
+                    <div class="col-span-full">
+                        <label class="text-lg font-medium mb-2" for="final_exam">Final Exam Weight (%)</label>
+                        <input type="number" name="final_exam" id="final_exam" placeholder="Input Final Exam Weight" class="p-4 border rounded-lg bg-blue-50 w-full font-medium" required min="1" max="100" value="{{ old('final_exam') }}">
+                        @if ($errors->has('weight'))
+                            <p class="mt-1 text-sm text-red-600">{{ $errors->first('weight') }}</p>
+                        @endif
                     </div>
 
                     <div class="flex items-center mb-4">
@@ -129,6 +153,13 @@
                                 </div>
 
                                 <div>
+                                    <label for="course_session_{{ $curr }}_topic" class="block text-sm font-medium dark:text-gray-700 mb-1">Session Topic</label>
+                                    <input type="text" name="course_session_{{ $curr }}_topic" id="course_session_{{ $curr }}_topic" placeholder="E.g., Introduction to Course" class="w-full px-4 py-3 border dark:border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all" required
+                                    @if(session()->has("registration.course.sessions")) value="{{ $sessions[$curr-1]['topic'] }}"
+                                    @elseif(session()->has("registration.course.fill_session")) value="{{ $sessionTopic . " $curr" }}" @endif>
+                                </div>
+
+                                <div>
                                     <label for="course_session_{{ $curr }}_main_material" class="block text-sm font-medium dark:text-gray-700 mb-1">Material Link</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -136,9 +167,9 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                             </svg>
                                         </div>
-                                        <input type="url" name="course_session_{{ $curr }}_main_material" id="course_session_{{ $curr }}_main_material" placeholder="https://example.com/material" class="w-full pl-10 pr-4 py-3 border dark:border-gray-300 ronded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all" required
-                                        @if(session()->has("registration.course.sessions")) value="{{ $sessions[$curr-1]['main_material'] }}"
-                                        @elseif(session()->has("registration.course.fill_session")) value="{{ $sessionMaterialLink }}" @endif>
+                                        <input type="url" name="course_session_{{ $curr }}_link" id="course_session_{{ $curr }}_link" placeholder="https://example.com/material" class="w-full pl-10 pr-4 py-3 border dark:border-gray-300 ronded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all" required
+                                        @if(session()->has("registration.course.sessions")) value="{{ $sessions[$curr-1]['link'] }}"
+                                        @elseif(session()->has("registration.course.fill_session")) value="{{ $sessionLink }}" @endif>
                                     </div>
                                 </div>
                             </div>
@@ -158,6 +189,27 @@
                         <h3 class="text-lg font-medium mb-2">Course Name:</h3>
                         <div class="p-4 border rounded-lg bg-blue-50">
                             <p class="font-medium">{{ $courseName }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Assignment Weight:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $weight['assignment'] }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Mid Exam Weight:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $weight['mid_exam'] }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <h3 class="text-lg font-medium mb-2">Final Exam Weight:</h3>
+                        <div class="p-4 border rounded-lg bg-blue-50">
+                            <p class="font-medium">{{ $weight['final_exam'] }}</p>
                         </div>
                     </div>
 
@@ -196,6 +248,11 @@
                                 </div>
 
                                 <div>
+                                    <p class="block text-sm dark:text-gray-700 mb-1">Material Topic</p>
+                                    <p class="w-full px-4 py-3 border dark:border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all"> {{ $session['topic'] }} </p>
+                                </div>
+
+                                <div>
                                     <p class="block text-sm dark:text-gray-700 mb-1">Material Link</p>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -203,7 +260,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                             </svg>
                                         </div>
-                                        <p class="w-full pl-10 pr-4 py-3 border dark:border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all"> {{ $session['main_material'] }} </p>
+                                        <p class="w-full pl-10 pr-4 py-3 border dark:border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 transition-all"> {{ $session['link'] }} </p>
                                     </div>
                                 </div>
                             </div>

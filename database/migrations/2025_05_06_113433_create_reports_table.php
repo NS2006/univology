@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained(
                 table: 'users',
                 indexName: 'reports_user_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

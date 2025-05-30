@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('faculty_id')->constrained(
                 table: 'faculties',
                 indexName: 'courses_faculty_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

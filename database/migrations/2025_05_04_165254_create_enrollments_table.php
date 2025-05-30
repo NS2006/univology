@@ -17,14 +17,16 @@ return new class extends Migration
             $table->string('status')->default('active'); # active/completed
             $table->integer('coin')->default(0);
             $table->integer('progress')->default(0);
+            $table->decimal('final_score')->nullable();
+
             $table->foreignId('student_id')->constrained(
                 table: 'students',
                 indexName: 'enrollment_student_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('classroom_id')->constrained(
                 table: 'classrooms',
                 indexName: 'enrollment_classroom_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

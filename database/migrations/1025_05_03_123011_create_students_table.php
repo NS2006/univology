@@ -19,11 +19,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained(
                 table: 'users',
                 indexName: 'students_user_id'
-            )->onDelete('cascade')->onUpdate('cascade');
+            )->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('faculty_id')->constrained(
                 table: 'faculties',
                 indexName: 'students_faculties_id'
-            )->onDelete('cascade')->onUpdate('cascade');
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

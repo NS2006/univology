@@ -1,9 +1,9 @@
 @student
-<a href="/classroom/{{ $enrollment->classroom->class_id }}/session/{{ $enrollment->classroom->classroom_sessions[0]->classroom_session_id }}">
+<a href="/classroom/{{ $enrollment->classroom->class_id }}/session/{{ $enrollment->classroom->classroom_sessions->first()->classroom_session_id }}">
 @endstudent
 
 @lecturer
-<a href="/classroom/{{ $classroom->class_id }}/session/{{ $classroom->classroom_sessions[0]->classroom_session_id }}">
+<a href="/classroom/{{ $classroom->class_id }}/session/{{ $classroom->classroom_sessions->first()->classroom_session_id }}">
 @endlecturer
 
     <div class="group mb-6 p-6 dark:bg-white rounded-xl dark:shadow-md hover:shadow-lg transition-all duration-300 bg-gray-800 border-gray-700 cursor-pointer relative overflow-hidden">

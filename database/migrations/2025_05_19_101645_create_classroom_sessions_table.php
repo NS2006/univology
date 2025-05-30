@@ -24,12 +24,12 @@ return new class extends Migration
             $table->foreignId('classroom_id')->constrained(
                 table: 'classrooms',
                 indexName: 'classroom_sessions_classroom_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->foreignId('course_session_id')->constrained(
                 table: 'course_sessions',
                 indexName: 'classroom_sessions_course_session_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

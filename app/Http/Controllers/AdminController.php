@@ -9,9 +9,7 @@ use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Classroom;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Number;
 
 class AdminController extends Controller
 {
@@ -78,11 +76,11 @@ class AdminController extends Controller
     public function indexAdministration () {
         return view('administration', [
             'title' => 'Univology | Administration',
-            'faculties' => Faculty::all(),
-            'students' => Student::all(),
-            'lecturers' => Lecturer::all(),
-            'courses' => Course::all(),
-            'classrooms' => Classroom::all()
+            'faculties' => Faculty::latest()->get(),
+            'students' => Student::latest()->get(),
+            'lecturers' => Lecturer::latest()->get(),
+            'courses' => Course::latest()->get(),
+            'classrooms' => Classroom::latest()->get()
         ]);
     }
 }

@@ -7,9 +7,10 @@ use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\Enrollment;
+use App\Models\StudentScore;
 use Illuminate\Database\Seeder;
 use App\Models\ClassroomSession;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\MaterialProgress;
 
 class ClassroomSeeder extends Seeder
 {
@@ -43,11 +44,22 @@ class ClassroomSeeder extends Seeder
 
         $students = Student::where('faculty_id', 1)->get();
         foreach($students as $student) {
-            Enrollment::create([
+            $enrollment = Enrollment::create([
                 'student_id' => $student->id,
                 'classroom_id' => $classroom->id,
                 'coin' => rand(100, 999)
             ]);
+            StudentScore::createDummyScore($enrollment);
+            Enrollment::checkFinalScore($enrollment);
+
+            foreach($courseSessions as $courseSession){
+                foreach($courseSession->main_materials as $main_material){
+                    MaterialProgress::create([
+                        'enrollment_id' => $enrollment->id,
+                        'material_id' => $main_material->material->id
+                    ]);
+                }
+            }
         }
     }
 }

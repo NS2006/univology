@@ -7,9 +7,10 @@ use App\Http\Controllers\MiscController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ViewAllController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function(){
     return view('login', ['title' => 'Univology | Login']);
@@ -33,39 +34,51 @@ Route::prefix('/view-all')->group(function(){
 
 Route::get('/courses', [CourseController::class, 'index'])->middleware('user');
 
-Route::prefix('/classroom/{classroom:class_id}')->group(function () {
-    Route::get('/session/{course_session:session_id}', function(Classroom $classroom, ClassroomSession $classroomSession){
-        return view('classroom', [
-            'title' => $classroom->class_code . ' ' . $classroom->course->name,
-            'classroom' => $classroom,
-            'classroomSession' => $classroomSession
-        ]);
-    });
+Route::prefix('/classroom/{classroom:class_id}')->scopeBindings()->group(function () {
+    Route::get('/session/{classroom_session}', [ClassroomController::class, 'indexSession']);
+
+    Route::get('/about', [ClassroomController::class, 'indexAbout']);
+
+    Route::get('/view-score', [ClassroomController::class, 'indexViewScore'])->middleware('student');
+
+    Route::prefix('/submit-score')->scopeBindings()->group(function () {
+        Route::get('/', [ClassroomController::class, 'indexSubmitScore']);
+
+        Route::get('/{submission_name}', [ClassroomController::class, 'submissionPage']);
+
+        Route::post('/{submission_name}/submit', [ClassroomController::class, 'doScoreSubmission']);
+    })->middleware('lecturer');
+
+    Route::get('/score-statistics', [ClassroomController::class, 'indexScoreStatistics'])->middleware('lecturer');
+
+    Route::post('/session/{classroom_session}/add-material', [ClassroomController::class, 'addAdditionalMaterial']);
+
+    Route::post('/view-material', [ClassroomController::class, 'viewMaterial']);
 })->middleware('user');
 
 Route::middleware(['clear.registration'])->group(function () {
-    Route::prefix('register/classroom')->group(function () {
-        Route::get('/{classroom_route}', [RegisterController::class, 'classroomRoute'])->middleware('admin')->name('register.classroom.classroom_route');
+    Route::prefix('register/classroom')->scopeBindings()->group(function () {
+        Route::get('/{classroom_route}', [RegisterController::class, 'classroomRoute'])->name('register.classroom.classroom_route');
 
-        Route::post('/store-data', [RegisterController::class, 'classroomStoreData'])->middleware('admin')->name('register.classroom.store-data');
+        Route::post('/store-data', [RegisterController::class, 'classroomStoreData'])->name('register.classroom.store-data');
     });
 
-    Route::prefix('register/course')->group(function () {
-        Route::get('/{course_route}', [RegisterController::class, 'courseRoute'])->middleware('admin')->name('register.course.course_route');
+    Route::prefix('register/course')->scopeBindings()->group(function () {
+        Route::get('/{course_route}', [RegisterController::class, 'courseRoute'])->name('register.course.course_route');
 
-        Route::post('/store-data', [RegisterController::class, 'courseStoreData'])->middleware('admin')->name('register.course.store-data');
+        Route::post('/store-data', [RegisterController::class, 'courseStoreData'])->name('register.course.store-data');
     });
 
-    Route::prefix('register/user')->group(function () {
-        Route::get('/{user_route}', [RegisterController::class, 'userRoute'])->middleware('admin')->name('register.user.user_route');
+    Route::prefix('register/user')->scopeBindings()->group(function () {
+        Route::get('/{user_route}', [RegisterController::class, 'userRoute'])->name('register.user.user_route');
 
-        Route::post('/store-data', [RegisterController::class, 'userStoreData'])->middleware('admin')->name('register.user.store-data');
+        Route::post('/store-data', [RegisterController::class, 'userStoreData'])->name('register.user.store-data');
     });
 
-    Route::prefix('register/faculty')->group(function () {
-        Route::get('/{faculty_route}', [RegisterController::class, 'facultyRoute'])->middleware('admin')->name('register.faculty.faculty_route');
+    Route::prefix('register/faculty')->scopeBindings()->group(function () {
+        Route::get('/{faculty_route}', [RegisterController::class, 'facultyRoute'])->name('register.faculty.faculty_route');
 
-        Route::post('/store-data', [RegisterController::class, 'facultyStoreData'])->middleware('admin')->name('register.faculty.store-data');
+        Route::post('/store-data', [RegisterController::class, 'facultyStoreData'])->name('register.faculty.store-data');
     });
 })->middleware('admin');
 

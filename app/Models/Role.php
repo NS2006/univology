@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Role extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['name'];
     protected $guarded = ['id'];
 
     public function user(): HasMany{

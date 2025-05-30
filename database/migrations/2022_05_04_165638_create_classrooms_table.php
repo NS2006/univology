@@ -18,11 +18,13 @@ return new class extends Migration
             $table->foreignId('lecturer_id')->constrained(
                 table: 'lecturers',
                 indexName: 'classrooms_lecturer_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
+            
             $table->foreignId('course_id')->constrained(
                 table: 'courses',
                 indexName: 'classrooms_course_id'
-            );
+            )->cascadeOnUpdate()->cascadeOnDelete();
+            
             $table->uuid('class_id')->unique();
             $table->string('class_code');
             $table->string('schedule');

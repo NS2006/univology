@@ -24,7 +24,7 @@ class StudentSeeder extends Seeder
         ]);
 
         Student::create([
-            'student_id' => 'STU' . rand(10000, 99999),
+            'student_id' => Student::generateStudentId(),
             'email' => Student::getEmail($name),
             'faculty_id' => 1,
             'user_id' => $user->id
@@ -40,7 +40,7 @@ class StudentSeeder extends Seeder
             ]);
 
             Student::create([
-                'student_id' => 'STU' . rand(10000, 99999),
+                'student_id' => Student::generateStudentId(),
                 'email' => Student::getEmail($name),
                 'faculty_id' => 1,
                 'user_id' => $user->id

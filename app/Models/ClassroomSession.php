@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClassroomSession extends Model
 {
@@ -18,6 +19,10 @@ class ClassroomSession extends Model
 
     public function course_session(): BelongsTo{
         return $this->belongsTo(CourseSession::class);
+    }
+
+    public function additional_materials(): HasMany{
+        return $this->hasMany(AdditionalMaterial::class);
     }
 
     public static function getDummyOnlineLink(){

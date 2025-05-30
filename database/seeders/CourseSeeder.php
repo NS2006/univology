@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\CourseSession;
+use App\Models\ScoreComponent;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -17,50 +18,20 @@ class CourseSeeder extends Seeder
     {
         $faculties = Faculty::all();
 
-        $course = Course::create([
-            'name' => 'Software Engineering',
-            'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
-            'credit' => 2,
-            'faculty_id' => 1
-        ]);
-        CourseSession::createDummySession($course);
+        $course_name = [
+            'Software Engineering', 'Computer Networks', 'Algorithm and Programming', 'Web Programming', 'Data Sturtures'
+        ];
 
-
-        $course = Course::create([
-            'name' => 'Computer Networks',
-            'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
-            'credit' => 2,
-            'faculty_id' => 1
-        ]);
-        CourseSession::createDummySession($course);
-
-
-        $course = Course::create([
-            'name' => 'Algorithm and Programming',
-            'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
-            'credit' => 2,
-            'faculty_id' => 1
-        ]);
-        CourseSession::createDummySession($course);
-
-
-        $course = Course::create([
-            'name' => 'Data Structures',
-            'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
-            'credit' => 2,
-            'faculty_id' => 1
-        ]);
-        CourseSession::createDummySession($course);
-
-
-        $course = Course::create([
-            'name' => 'Web Programming',
-            'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
-            'credit' => 2,
-            'faculty_id' => 1
-        ]);
-        CourseSession::createDummySession($course);
-
+        for($i = 0; $i < count($course_name); $i++){
+            $course = Course::create([
+                'name' => $course_name[$i],
+                'course_id' => Course::generateCourseId($faculties->where('id', '==', 1)->first()->name),
+                'credit' => 2,
+                'faculty_id' => 1
+            ]);
+            CourseSession::createDummySession($course);
+            ScoreComponent::createDummyComponent($course);
+        }
 
         for( $j = 2; $j < 5; $j++ ) {
             for($i = 0; $i < 2; $i++) {
@@ -72,7 +43,7 @@ class CourseSeeder extends Seeder
                     'faculty_id' => $j
                 ]);
                 CourseSession::createDummySession($course);
-
+                ScoreComponent::createDummyComponent($course);
             }
         }
     }
