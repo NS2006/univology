@@ -21,11 +21,11 @@ return new class extends Migration
 
             $table->foreignId('student_id')->constrained(
                 table: 'students',
-                indexName: 'enrollment_student_id'
+                indexName: 'enrollments_student_id'
             )->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('classroom_id')->constrained(
                 table: 'classrooms',
-                indexName: 'enrollment_classroom_id'
+                indexName: 'enrollments_classroom_id'
             )->cascadeOnUpdate()->cascadeOnDelete();
         });
     }

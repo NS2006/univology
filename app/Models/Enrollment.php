@@ -50,6 +50,14 @@ class Enrollment extends Model
         return $this->hasMany(StudentScore::class);
     }
 
+    public function purchase_histories(): HasMany{
+        return $this->hasMany(PurchaseHistory::class);
+    }
+
+    public function attendances(): HasMany{
+        return $this->hasMany(Attendance::class);
+    }
+
     public static function checkFinalScore(Enrollment $enrollment){
         $scores = $enrollment->student_scores;
         $final_score = 0;
@@ -63,5 +71,9 @@ class Enrollment extends Model
 
         $enrollment->final_score = $final_score / 100;
         $enrollment->save();
+    }
+
+    public function getAttendanceForSession($sessionId){
+        return $this->attendances()->where('classroom_session_id', $sessionId)->first();
     }
 }

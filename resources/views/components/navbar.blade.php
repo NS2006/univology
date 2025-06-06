@@ -114,12 +114,6 @@
             <x-nav-link href='/assignments' :active="request()->is('assignment')">Assignment</x-nav-link>
         </li>
         @enduser
-
-        @student
-        <li>
-            <x-nav-link href='/shop' :active="request()->is('shop')">Shop</x-nav-link>
-        </li>
-        @endstudent
       </ul>
     </div>
     </div>

@@ -19,7 +19,7 @@ class CourseSeeder extends Seeder
         $faculties = Faculty::all();
 
         $course_name = [
-            'Software Engineering', 'Computer Networks', 'Algorithm and Programming', 'Web Programming', 'Data Sturtures'
+            'Software Engineering', 'Computer Networks', 'Algorithm and Programming', 'Web Programming', 'Data Structures'
         ];
 
         for($i = 0; $i < count($course_name); $i++){

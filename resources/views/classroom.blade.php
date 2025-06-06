@@ -98,6 +98,22 @@
                     </div>
                 </div>
             </a>
+
+            <!-- Shop Card -->
+            <a href="{{ $classroomUrl }}/shop"
+            class="group dark:bg-white bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6 border dark:border-gray-200 border-gray-700 dark:hover:border-yellow-500 hover:border-yellow-500">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-full dark:bg-yellow-100 bg-yellow-900/50 dark:text-yellow-600 text-yellow-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold dark:text-gray-800 text-gray-200 dark:group-hover:text-yellow-600 group-hover:text-yellow-400">Shop</h3>
+                        <p class="text-sm dark:text-gray-500 text-gray-400">Spend your coins</p>
+                    </div>
+                </div>
+            </a>
             @endstudent
 
             @lecturer
@@ -137,128 +153,154 @@
 
         {{-- Session Page --}}
         @if ($page == 'session')
-            <div class="bg-gray-800 dark:bg-white rounded-xl shadow-lg overflow-hidden">
-            <!-- Session Navigation Tabs -->
-            <div class="border-b border-gray-700 dark:border-gray-200">
-                <nav class="flex overflow-x-auto px-4 -mb-px">
-                @foreach ($classroom->classroom_sessions as $classroom_session_loop)
-                    <a href="{{ $classroomUrl }}/session/{{ $classroom_session_loop->classroom_session_id }}"
-                    class="@if($classroom_session_loop->classroom_session_id == $classroom_session->classroom_session_id) border-blue-500 dark:text-blue-600 text-blue-400 @else border-transparent dark:hover:text-gray-700 dark:hover:border-gray-300 hover:text-gray-300 hover:border-gray-700 @endif whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm transition-colors">
-                    Session {{ $classroom_session_loop->course_session->session_number }}
-                    </a>
-                @endforeach
-                </nav>
-            </div>
-
-            <!-- Current Session Content -->
-            <div class="p-6">
-                <!-- Session Header -->
-                <div class="mb-6 pb-6 border-b border-gray-700 dark:border-gray-200">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                    <h2 class="text-2xl font-bold text-white dark:text-gray-800">
-                        Session {{ $classroom_session->course_session->session_number }}: {{ $classroom_session->course_session->title }}
-                    </h2>
-                    <div class="flex items-center mt-2 text-sm text-gray-400 dark:text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        {{ $classroom_session->date }} •
-                        {{ \Carbon\Carbon::parse($classroom_session->start_time)->format('g:i A') }} -
-                        {{ \Carbon\Carbon::parse($classroom_session->end_time)->format('g:i A') }}
-                    </div>
-                    </div>
-
-                    <!-- Online Link Section -->
-                    @if($classroom->online_link)
-                    <a href="{{ $classroom->online_link }}" target="_blank"
-                        class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
-                        </svg>
-                        Join Online Class
-                    </a>
-                    @endif
-                </div>
-                </div>
-
-                <!-- Lecturer Section -->
-                <div class="mb-6 p-4 bg-gray-700 dark:bg-gray-100 rounded-lg">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                    {{ substr($classroom->lecturer->user->name, 0, 1) }}
-                    </div>
-                    <div class="ml-4">
-                    <h4 class="text-lg font-medium text-white dark:text-gray-800">Lecturer</h4>
-                    <p class="text-sm text-gray-300 dark:text-gray-600">
-                        {{ $classroom->lecturer->lecturer_id }} - {{ $classroom->lecturer->user->name }}
-                    </p>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Main Materials Section -->
-                <div class="mb-8">
-                <h3 class="text-lg font-semibold text-white dark:text-gray-800 mb-4 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Main Materials
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($classroom_session->course_session->main_materials as $main_material)
-                        <x-material-card :classroomUrl="$classroomUrl" :material="$main_material->material" :classroom="$classroom" />
+            <div class="rounded-xl shadow-lg overflow-hidden @if($classroom_session->is_finished) border-4 border-green-200 @endif bg-gray-800 dark:bg-white">
+                <!-- Session Navigation Tabs -->
+                <div class="border-b border-gray-700 dark:border-gray-200">
+                    <nav class="flex overflow-x-auto px-4 -mb-px">
+                    @foreach ($classroom->classroom_sessions as $classroom_session_loop)
+                        <a href="{{ $classroomUrl }}/session/{{ $classroom_session_loop->classroom_session_id }}"
+                        class="@if($classroom_session_loop->classroom_session_id == $classroom_session->classroom_session_id) border-blue-500 dark:text-blue-600 text-blue-400 @else border-transparent dark:hover:text-gray-700 dark:hover:border-gray-300 hover:text-gray-300 hover:border-gray-700 @endif whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm transition-colors">
+                        Session {{ $classroom_session_loop->course_session->session_number }}
+                        </a>
                     @endforeach
-                </div>
+                    </nav>
                 </div>
 
-                <!-- Additional Materials Section -->
-                <div class="mb-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-white dark:text-gray-800 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
-                    Additional Materials
+                <!-- Current Session Content -->
+                <div class="p-6">
+                    <!-- Session Header -->
+                    <div class="mb-6 pb-6 border-b border-gray-700 dark:border-gray-200">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-white dark:text-gray-800">
+                                    Session {{ $classroom_session->course_session->session_number }}: {{ $classroom_session->course_session->title }}
+                                </h2>
+
+                                <div class="flex items-center text-sm mt-1">
+                                    @if ($classroom_session->is_finished)
+                                        <span class="inline-flex items-center px-2 py-1 bg-green-600 text-white text-xs font-medium rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Finished
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <div class="flex items-center mt-2 text-sm text-gray-400 dark:text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ $classroom_session->date }} •
+                                    {{ \Carbon\Carbon::parse($classroom_session->start_time)->format('g:i A') }} -
+                                    {{ \Carbon\Carbon::parse($classroom_session->end_time)->format('g:i A') }}
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                @lecturer
+                                <!-- Attendance Button -->
+                                <a href="{{ $classroomUrl }}/session/{{ $classroom_session->classroom_session_id }}/attendance"
+                                    class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ $classroom_session->is_finished == 0 ? 'Take' : 'View' }} Attendance
+                                </a>
+                                @endlecturer
+
+                                <!-- Online Link Section -->
+                                @if($classroom->online_link && $valid_session == true)
+                                    <a href="{{ $classroomUrl }}/session/{{ $classroom_session->classroom_session_id }}/online-link" target="_blank"
+                                        class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                                        </svg>
+                                        Join Online Class
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lecturer Section -->
+                    <div class="mb-6 p-4 bg-gray-700 dark:bg-gray-100 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                        {{ substr($classroom->lecturer->user->name, 0, 1) }}
+                        </div>
+                        <div class="ml-4">
+                        <h4 class="text-lg font-medium text-white dark:text-gray-800">Lecturer</h4>
+                        <p class="text-sm text-gray-300 dark:text-gray-600">
+                            {{ $classroom->lecturer->lecturer_id }} - {{ $classroom->lecturer->user->name }}
+                        </p>
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- Main Materials Section -->
+                    <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-white dark:text-gray-800 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Main Materials
                     </h3>
 
-                    @lecturer
-                    <button type="button" data-modal-target="additional-material-modal" data-modal-toggle="additional-material-modal"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                    </svg>
-                    Add Material
-                    </button>
-                    @endlecturer
-                </div>
-
-                @if($classroom_session->additional_materials->isNotEmpty())
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($classroom_session->additional_materials as $additional_material)
-                        <x-material-card :classroomUrl="$classroomUrl" :material="$additional_material->material" :classroom="$classroom" />
-                    @endforeach
+                        @foreach ($classroom_session->course_session->main_materials as $main_material)
+                            <x-material-card :classroomUrl="$classroomUrl" :material="$main_material->material" :classroom="$classroom" />
+                        @endforeach
                     </div>
-                @else
-                    <div class="text-center py-8 bg-gray-700 dark:bg-gray-50 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    <p class="mt-2 text-gray-400 dark:text-gray-500">No additional materials added yet</p>
-                    @lecturer
-                    <button type="button" data-modal-target="additional-material-modal" data-modal-toggle="additional-material-modal"
-                            class="mt-4 inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </div>
+
+                    <!-- Additional Materials Section -->
+                    <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-white dark:text-gray-800 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                         </svg>
-                        Add Your First Material
-                    </button>
-                    @endlecturer
+                        Additional Materials
+                        </h3>
+
+                        @lecturer
+                        <button type="button" data-modal-target="additional-material-modal" data-modal-toggle="additional-material-modal"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Add Material
+                        </button>
+                        @endlecturer
                     </div>
-                @endif
+
+                    @if($classroom_session->additional_materials->isNotEmpty())
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @foreach ($classroom_session->additional_materials as $additional_material)
+                            <x-material-card :classroomUrl="$classroomUrl" :material="$additional_material->material" :classroom="$classroom" />
+                        @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-8 bg-gray-700 dark:bg-gray-50 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p class="mt-2 text-gray-400 dark:text-gray-500">No additional materials added yet</p>
+                        @lecturer
+                        <button type="button" data-modal-target="additional-material-modal" data-modal-toggle="additional-material-modal"
+                                class="mt-4 inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            Add Your First Material
+                        </button>
+                        @endlecturer
+                        </div>
+                    @endif
+                    </div>
                 </div>
-            </div>
             </div>
         @endif
 
@@ -412,6 +454,146 @@
                             </div>
                         </div>
                         @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if ($page == 'shop')
+            <div class="container mx-auto px-4 py-6 relative">
+                @if ($attendance_percentage < 50)
+                    <div class="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-lg">
+                        <div class="bg-white dark:bg-gray-900 text-center px-6 py-8 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 max-w-md">
+                            <h2 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">Feature Locked</h2>
+                            <p class="text-gray-800 dark:text-gray-300 mb-4">You need at least <strong>50% attendance</strong> to access the shop.</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-yellow-400 dark:text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            </svg>
+                        </div>
+                    </div>
+                @endif
+
+
+                <!-- Coin Balance Display -->
+                <div class="dark:bg-white bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold dark:text-gray-800 text-white">Your Coin Balance</h2>
+                            <p class="dark:text-gray-600 text-gray-400">Earn more coins by completing assignments</p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full dark:bg-yellow-100 bg-yellow-900/50 dark:text-yellow-600 text-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <span class="ml-3 text-2xl font-bold dark:text-gray-800 text-white">{{ $enrollment->coin }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchasable Items -->
+                @php
+                $color_points = [
+                    '1' => 'dark:bg-blue-100 bg-blue-900/50 dark:text-blue-800 text-blue-400',
+                    '2' => 'dark:bg-purple-100 bg-purple-900/50 dark:text-purple-800 text-purple-400',
+                    '3' => 'dark:bg-green-100 bg-green-900/50 dark:text-green-800 text-green-400'
+                ];
+
+                $color_buttons = [
+                    '1' => 'bg-blue-600 hover:bg-blue-700',
+                    '2' => 'bg-purple-600 hover:bg-purple-700',
+                    '3' => 'bg-green-600 hover:bg-green-700'
+                ];
+                @endphp
+
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    @foreach ($boosters as $booster)
+                        <form action="{{ $classroomUrl }}/shop/{{ $booster['id'] }}"  method="POST" class="dark:bg-white bg-gray-800 rounded-lg shadow-md overflow-hidden border dark:border-gray-200 border-gray-700 hover:shadow-lg transition-shadow">
+                            @csrf
+                            <input type="hidden" name="enrollment_id" value="{{ $enrollment->id }}">
+
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-lg font-bold dark:text-gray-800 text-white">{{ $booster['name'] }}</h3>
+                                    <span class="px-2 py-1 {{ $color_points[$booster['id']] }} text-xs font-medium rounded-full">+{{ $booster['point'] }} Point</span>
+                                </div>
+                                <p class="dark:text-gray-600 text-gray-400 mb-4">{{ $booster['description'] }}</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span class="ml-1 font-medium dark:text-gray-800 text-white">{{ $booster['price'] }}</span>
+                                    </div>
+                                    <button class="px-4 py-2 {{ $color_buttons[$booster['id']] }} rounded-md transition-colors text-white {{ $enrollment->coin >= $booster['price'] ? "cursor-pointer" : "cursor-not-allowed" }}">
+                                        @if($enrollment->coin >= $booster['price'])
+                                            Purchase
+                                        @else
+                                            Not Enough Coins
+                                        @endif
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    @endforeach
+                </div>
+
+                <!-- Purchase History Button -->
+                <div class="text-center mt-8">
+                    <button data-modal-target="purchase-history-modal" data-modal-toggle="purchase-history-modal"
+                        class="px-6 py-3 dark:bg-gray-100 dark:hover:bg-gray-200 dark:text-gray-800 bg-gray-700 hover:bg-gray-600 text-white rounded-lg shadow-md flex items-center gap-2 mx-auto transition-colors font-bold cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        View Purchase History
+                    </button>
+                </div>
+
+                <!-- Purchase History Modal -->
+                <div id="purchase-history-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm">
+                    <div class="relative p-4 w-full max-w-2xl max-h-full">
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-700">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Your Purchase History
+                                </h3>
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="purchase-history-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <div class="p-6">
+                                @if($purchase_histories->count() > 0)
+                                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        @foreach($purchase_histories as $purchase)
+                                        <div class="py-4">
+                                            <div class="flex justify-between">
+                                                <div>
+                                                    <h4 class="font-medium text-gray-900 dark:text-white">{{ $purchase->description }}</h4>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $purchase->created_at->format('M d, Y H:i') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center py-8">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                        </svg>
+                                        <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">No purchases yet</h3>
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Your purchase history will appear here</p>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex items-center p-6 border-t border-gray-200 dark:border-gray-700 rounded-b">
+                                <button data-modal-hide="purchase-history-modal" type="button" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -769,6 +951,236 @@
                     </table>
                 </div>
             </div>
+        @endif
+
+        @if ($page == 'attendance')
+        <div class="container mx-auto px-4 py-6">
+            <!-- Attendance Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold dark:text-gray-800 text-white mb-2">
+                    Attendance for Session {{ $classroom_session->course_session->session_number }}
+                </h1>
+                <div class="flex items-center text-sm dark:text-gray-600 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="font-medium text-gray-700 dark:text-gray-800">
+                        {{ $classroom_session->date->format('F j, Y') }} •
+                        {{ $classroom->class_code }} - {{ $classroom->course->name }}
+                    </span>
+                </div>
+
+                @if ($classroom_session->is_finished == 1)
+                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-600 mt-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="mr-1 text-gray-800">Last Updated:</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-800">
+                            {{ $classroom_session->updated_at->format('F j, Y \a\t g:i A') }}
+                        </span>
+                    </div>
+                @endif
+
+
+            </div>
+
+            @if ($classroom_session->is_finished == 1)
+                <!-- Attendance Statistics -->
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Present Students -->
+                        <div class="dark:bg-green-50 bg-green-900/20 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium dark:text-green-600 text-green-400">Present</p>
+                                    <p class="text-2xl font-bold dark:text-green-800 text-green-300">
+                                        {{ $attendances->where('status', true)->count() }}
+                                        <span class="text-sm font-normal">({{ round($attendances->where('status', true)->count() / $enrollments->count() * 100) }}%)</span>
+                                    </p>
+                                </div>
+                                <div class="p-2 rounded-full dark:bg-green-100 bg-green-800/50 dark:text-green-600 text-green-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Absent Students -->
+                        <div class="dark:bg-red-50 bg-red-900/20 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium dark:text-red-600 text-red-400">Absent</p>
+                                    <p class="text-2xl font-bold dark:text-red-800 text-red-300">
+                                        {{ $attendances->where('status', false)->count() }}
+                                        <span class="text-sm font-normal">({{ round($attendances->where('status', false)->count() / $enrollments->count() * 100) }}%)</span>
+                                    </p>
+                                </div>
+                                <div class="p-2 rounded-full dark:bg-red-100 bg-red-800/50 dark:text-red-600 text-red-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Attendance Form -->
+            <form action="{{ $classroomUrl }}/session/{{ $classroom_session->classroom_session_id }}/attendance/save-attendance" method="POST">
+                @csrf
+
+                <div class="dark:bg-white bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                    <!-- Table Header -->
+                    <div class="grid grid-cols-12 px-6 py-4 bg-gray-900 dark:bg-gray-100 border-b border-gray-600 dark:border-gray-300">
+                        <div class="col-span-8 text-sm font-semibold text-white dark:text-gray-800 tracking-wide uppercase">
+                            Student Information
+                        </div>
+                        <div class="col-span-4 flex items-center justify-end gap-2">
+                            <span class="text-sm font-semibold text-white dark:text-gray-800 tracking-wide uppercase">
+                                Attendance
+                            </span>
+                            @if ($classroom_session->is_finished == 0)
+                                <button type="button" id="check-all-btn"
+                                class="px-3 py-1.5 text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg flex items-center gap-1 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Check All
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
+
+
+                    @foreach($enrollments as $enrollment)
+                        <div class="grid grid-cols-12 px-6 py-4 border-b dark:border-gray-200 border-gray-600 dark:hover:bg-gray-50 hover:bg-gray-700/50 transition-colors">
+                            <!-- Student Info -->
+                            <div class="col-span-8 flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full dark:bg-gray-200 bg-gray-600 flex items-center justify-center mr-3">
+                                    <span class="dark:text-gray-600 text-gray-300 font-medium">
+                                        {{ substr($enrollment->student->user->name, 0, 1) }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="font-medium dark:text-gray-900 text-white">
+                                        {{ $enrollment->student->user->name }}
+                                    </div>
+                                    <div class="text-sm dark:text-gray-500 text-gray-400">
+                                        {{ $enrollment->student->student_id }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attendance Status -->
+                            <div class="col-span-4 flex items-center justify-end">
+                                @if ($classroom_session->is_finished == 0)
+                                    <!-- Editable Status (Session Ongoing) -->
+                                    <label class="inline-flex items-center cursor-pointer group">
+                                        <input type="checkbox"
+                                            name="attendance[{{ $enrollment->id }}]"
+                                            value="present"
+                                            class="attendance-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 dark:border-gray-600 dark:checked:bg-blue-600 dark:checked:border-blue-600"
+                                            @if($enrollment->getAttendanceForSession($classroom_session->id)?->status == true) checked @endif>
+                                        <span class="ml-2 text-sm font-medium dark:text-gray-700 text-gray-300 dark:group-hover:text-blue-600 group-hover:text-blue-400 transition-colors">
+                                            Present
+                                        </span>
+                                    </label>
+                                @else
+                                    @php
+                                    $curr = $attendances->where('enrollment_id', $enrollment->id)->first();
+                                    @endphp
+                                    <div class="flex items-center">
+                                        @if ($curr->status == true)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium dark:bg-green-100 dark:text-green-800 bg-green-900/30 text-green-400">
+                                                <svg class="-ml-0.5 mr-1.5 h-3 w-3 dark:text-green-500 text-green-400" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3" />
+                                                </svg>
+                                                Present
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium dark:bg-red-100 dark:text-red-800 bg-red-900/30 text-red-400">
+                                                <svg class="-ml-0.5 mr-1.5 h-3 w-3 text-red-500 dark:text-red-400" fill="currentColor" viewBox="0 0 8 8">
+                                                    <circle cx="4" cy="4" r="3" />
+                                                </svg>
+                                                Absent
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+
+                @if ($classroom_session->is_finished == 0)
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const checkAllBtn = document.getElementById('check-all-btn');
+                        const checkboxes = document.querySelectorAll('.attendance-checkbox');
+                        let allChecked = false;
+
+                        // Initialize button state based on current checkboxes
+                        updateButtonState();
+
+                        checkAllBtn.addEventListener('click', function() {
+                            allChecked = !allChecked;
+
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = allChecked;
+                            });
+
+                            updateButtonState();
+                        });
+
+                        // Update individual checkboxes to affect the "Check All" button state
+                        checkboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', function() {
+                                updateButtonState();
+                            });
+                        });
+
+                        function updateButtonState() {
+                            const checkedCount = document.querySelectorAll('.attendance-checkbox:checked').length;
+                            allChecked = checkedCount === checkboxes.length;
+
+                            if (allChecked) {
+                                checkAllBtn.innerHTML = `
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                    Uncheck All
+                                `;
+                                checkAllBtn.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                                checkAllBtn.classList.add('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900/50', 'dark:text-blue-400');
+                            } else {
+                                checkAllBtn.innerHTML = `
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Check All
+                                `;
+                                checkAllBtn.classList.remove('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900/50', 'dark:text-blue-400');
+                                checkAllBtn.classList.add('bg-gray-200', 'dark:bg-gray-700');
+                            }
+                        }
+                    });
+                    </script>
+                @endif
+                </div>
+
+                @if ($classroom_session->is_finished == 0)
+                    <!-- Form Actions -->
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
+                            Save Attendance
+                        </button>
+                    </div>
+                @endif
+            </form>
+        </div>
         @endif
         @endlecturer
     </div>

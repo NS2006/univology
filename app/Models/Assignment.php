@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Question;
-use App\Models\Classroom;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,5 +19,13 @@ class Assignment extends Model
 
     public function questions(): HasMany{
         return $this->hasMany(Question::class);
+    }
+
+    protected static function boot(){
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->assignment_id = Str::uuid();
+        });
     }
 }

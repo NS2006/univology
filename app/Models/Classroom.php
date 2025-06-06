@@ -35,6 +35,10 @@ class Classroom extends Model
         return $this->hasMany(ClassroomSession::class);
     }
 
+    public function assignments(): HasMany{
+        return $this->hasMany(Assignment::class);
+    }
+
     public static function generateClassCode(string $name): string{
         $classCode = $name[0];
 

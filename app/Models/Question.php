@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Choice;
-use App\Models\Assignment;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,11 +13,19 @@ class Question extends Model
 
     protected $with = ['assignment'];
 
+    public function assignment(): BelongsTo{
+        return $this->belongsTo(Assignment::class);
+    }
+
     public function choices(): HasMany{
         return $this->hasMany(Choice::class);
     }
 
-    public function assignment(): BelongsTo{
-        return $this->belongsTo(Assignment::class);
+    protected static function boot(){
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->question_id = Str::uuid();
+        });
     }
 }

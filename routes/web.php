@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Classroom;
-use App\Models\ClassroomSession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\AdminController;
@@ -11,6 +9,7 @@ use App\Http\Controllers\ViewAllController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AssignmentController;
 
 Route::get('/', function(){
     return view('login', ['title' => 'Univology | Login']);
@@ -34,12 +33,34 @@ Route::prefix('/view-all')->group(function(){
 
 Route::get('/courses', [CourseController::class, 'index'])->middleware('user');
 
+Route::get('/assignments', [AssignmentController::class, 'indexAssignments'])->middleware('user');
+
+Route::prefix('/assignment')->scopeBindings()->group(function(){
+    Route::prefix('/{assignment:assignment_id}')->scopeBindings()->group(function(){
+        Route::get('/', [AssignmentController::class, 'indexAssignment']);
+
+        Route::post('/delete-assignment', [AssignmentController::class, 'deleteAssignment'])->middleware('lecturer');
+    })->middleware('user');
+
+    Route::post('/new-assignment', [AssignmentController::class, 'newAssignment'])->middleware('lecturer');
+})->middleware('user');
+
 Route::prefix('/classroom/{classroom:class_id}')->scopeBindings()->group(function () {
-    Route::get('/session/{classroom_session}', [ClassroomController::class, 'indexSession']);
+    Route::prefix('/session/{classroom_session}')->scopeBindings()->group(function(){
+        Route::get('/', [ClassroomController::class, 'indexSession']);
+
+        Route::get('/attendance', [ClassroomController::class, 'indexAttendance'])->middleware('lecturer');
+
+        Route::get('/online-link', [ClassroomController::class, 'directOnlineLink']);
+
+        Route::post('/attendance/save-attendance', [ClassroomController::class, 'saveAttendance']);
+    });
 
     Route::get('/about', [ClassroomController::class, 'indexAbout']);
 
     Route::get('/view-score', [ClassroomController::class, 'indexViewScore'])->middleware('student');
+
+    Route::get('/shop', [ClassroomController::class, 'indexShop'])->middleware('student');
 
     Route::prefix('/submit-score')->scopeBindings()->group(function () {
         Route::get('/', [ClassroomController::class, 'indexSubmitScore']);
@@ -50,6 +71,8 @@ Route::prefix('/classroom/{classroom:class_id}')->scopeBindings()->group(functio
     })->middleware('lecturer');
 
     Route::get('/score-statistics', [ClassroomController::class, 'indexScoreStatistics'])->middleware('lecturer');
+
+    Route::post('/shop/{booster_id}', [ClassroomController::class, 'purchaseBooster'])->middleware('student');
 
     Route::post('/session/{classroom_session}/add-material', [ClassroomController::class, 'addAdditionalMaterial']);
 
@@ -82,7 +105,6 @@ Route::middleware(['clear.registration'])->group(function () {
     });
 })->middleware('admin');
 
-
 Route::get('/dashboard/admin', [DashboardController::class, 'indexAdmin'])->name('dashboard_admin')->middleware('admin');
 
 Route::post('/user/report', [MiscController::class,'reportUser']);
@@ -98,4 +120,3 @@ Route::post('/solve/report', [AdminController::class,'solveReport']);
 Route::post('/login', [LoginController::class,'authenticate']);
 
 Route::post('/logout', [LoginController::class,'logout']);
-

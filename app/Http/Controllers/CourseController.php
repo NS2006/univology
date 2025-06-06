@@ -37,7 +37,6 @@ class CourseController extends Controller
         } else {
             $u = $user->lecturer;
 
-            // Use query builder for filtering
             $classrooms = $u->classrooms()
                 ->when(request('search'), function($query) {
                     $query->whereHas('course', function($q) {

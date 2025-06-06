@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Course;
 use App\Models\Report;
 use App\Models\Faculty;
@@ -17,6 +18,7 @@ class DashboardController extends Controller
 {
     public function indexUser(){
         $user = Auth::user();
+        $now = Carbon::now();
 
         if ($user->role->name == 'student') {
             $u = $user->student;
@@ -26,12 +28,23 @@ class DashboardController extends Controller
             });
 
             $topSession = ClassroomSession::with(['classroom.enrollments' => function($query) use ($u){
-                $query->where('student_id', $u->id);
-            }])
-            ->whereIn('classroom_id', $classrooms->pluck('id'))
-            ->where('is_finished', 0)
-            ->orderBy('date', 'ASC')
-            ->first();
+                    $query->where('student_id', $u->id);
+                }])
+                ->whereIn('classroom_id', $classrooms->pluck('id'))
+                ->where('is_finished', 0)
+                ->where(function ($query) use ($now) {
+                    $query->where('date', '>', $now->toDateString())
+                        ->orWhere(function ($query) use ($now) {
+                            $query->whereDate('date', $now->toDateString())
+                                    ->whereTime('start_time', '>', $now->toTimeString());
+                        })->orWhere(function ($query) use ($now) {
+                            $query->whereDate('date', $now->toDateString())
+                                    ->whereTime('end_time', '>', $now->toTimeString());
+                        });
+                })
+                ->orderBy('date', 'ASC')
+                ->orderBy('start_time', 'ASC')
+                ->first();
         } else {
             $u = $user->lecturer;
             $classrooms = $u->classrooms;
@@ -41,7 +54,19 @@ class DashboardController extends Controller
 
             $topSession = ClassroomSession::whereIn('classroom_id', $classrooms->pluck('id'))
                 ->where('is_finished', 0)
+                ->where(function ($query) use ($now) {
+                    $query->where('date', '>', $now->toDateString())
+                        ->orWhere(function ($query) use ($now) {
+                            $query->whereDate('date', $now->toDateString())
+                                    ->whereTime('start_time', '>', $now->toTimeString());
+                        })
+                        ->orWhere(function ($query) use ($now) {
+                            $query->whereDate('date', $now->toDateString())
+                                    ->whereTime('end_time', '>', $now->toTimeString());
+                        });
+                })
                 ->orderBy('date', 'ASC')
+                ->orderBy('start_time', 'ASC')
                 ->first();
         }
 

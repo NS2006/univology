@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Classroom;
+use App\Models\Attendance;
 use App\Models\Enrollment;
 use App\Models\StudentScore;
 use Illuminate\Database\Seeder;
@@ -47,10 +48,18 @@ class ClassroomSeeder extends Seeder
             $enrollment = Enrollment::create([
                 'student_id' => $student->id,
                 'classroom_id' => $classroom->id,
-                'coin' => rand(100, 999)
+                // 'coin' => rand(100, 999)
+                'coin' => 100000
             ]);
             StudentScore::createDummyScore($enrollment);
             Enrollment::checkFinalScore($enrollment);
+
+            foreach($classroom->classroom_sessions as $classroom_sesion){
+                Attendance::create([
+                    'enrollment_id' => $enrollment->id,
+                    'classroom_session_id' => $classroom_sesion->id
+                ]);
+            }
 
             foreach($courseSessions as $courseSession){
                 foreach($courseSession->main_materials as $main_material){

@@ -10,8 +10,10 @@ use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Material;
 use App\Models\Classroom;
+use App\Models\Attendance;
 use App\Models\Enrollment;
 use App\Models\MainMaterial;
+use App\Models\StudentScore;
 use Illuminate\Http\Request;
 use App\Models\CourseSession;
 use App\Models\ScoreComponent;
@@ -20,7 +22,6 @@ use App\Models\ClassroomSession;
 use App\Models\MaterialProgress;
 use App\Models\MainMaterialProgress;
 use Illuminate\Support\Facades\Validator;
-use App\Models\StudentScore;
 
 class RegisterController extends Controller
 {
@@ -267,6 +268,13 @@ class RegisterController extends Controller
                     'student_id' => $student->id,
                     'classroom_id' => $classroom->id
                 ]);
+
+                foreach($classroom->classroom_sessions as $classroom_sesion){
+                    Attendance::create([
+                        'enrollment_id' => $enrollment->id,
+                        'classroom_session_id' => $classroom_sesion->id
+                    ]);
+                }
 
                 foreach($classroom->course->course_sessions as $course_session){
                     foreach($course_session->main_materials as $main_material){
