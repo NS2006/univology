@@ -58,6 +58,10 @@ class Enrollment extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function assignment_entries(): HasMany{
+        return $this->hasMany(AssignmentEntry::class);
+    }
+
     public static function checkFinalScore(Enrollment $enrollment){
         $scores = $enrollment->student_scores;
         $final_score = 0;

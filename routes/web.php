@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ViewAllController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\DashboardController;
@@ -39,7 +40,27 @@ Route::prefix('/assignment')->scopeBindings()->group(function(){
     Route::prefix('/{assignment:assignment_id}')->scopeBindings()->group(function(){
         Route::get('/', [AssignmentController::class, 'indexAssignment']);
 
+        Route::get('/question', [QuestionController::class, 'directQuestion'])->middleware('lecturer');
+
+        Route::get('/do-question', [QuestionController::class, 'doQuestion'])->middleware('student');
+
+        Route::get('/question/new-question', [QuestionController::class, 'addNewQuestion']);
+
+        Route::prefix('/question/{question:question_id}')->scopeBindings()->group(function(){
+            Route::get('/', [QuestionController::class, 'indexQuestion']);
+
+            Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
+
+            Route::post('/save-choice', [QuestionController::class, 'saveChoice']);
+
+            Route::post('/delete', [QuestionController::class, 'deleteQuestion']);
+        })->middleware('lecturer');
+
+        Route::post('/submit-answer', [AssignmentController::class, 'submitAnswer'])->middleware('student');
+
         Route::post('/delete-assignment', [AssignmentController::class, 'deleteAssignment'])->middleware('lecturer');
+
+        Route::post('/publish', [AssignmentController::class, 'publishAssignment'])->middleware('lecturer');
     })->middleware('user');
 
     Route::post('/new-assignment', [AssignmentController::class, 'newAssignment'])->middleware('lecturer');

@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignment extends Model
 {
+    protected $casts = [
+        'deadline' => 'datetime',
+    ];
+    
     protected $guarded = ['id'];
 
     protected $with = ['classroom'];
@@ -19,6 +23,16 @@ class Assignment extends Model
 
     public function questions(): HasMany{
         return $this->hasMany(Question::class);
+    }
+
+    public function assignment_entries(): HasMany{
+        return $this->hasMany(AssignmentEntry::class);
+    }
+
+    public function isDeadlinePassed(){
+        return $this->deadline
+            ? now()->gt($this->deadline)
+            : false;
     }
 
     protected static function boot(){

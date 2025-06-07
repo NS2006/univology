@@ -87,93 +87,122 @@
     </div>
     @endlecturer
 
-    @lecturer
-    <div>
-        @if (!$unpublished_assignments->isEmpty())
-        <h1>Unpublished Assignment</h1>
-            @foreach ($unpublished_assignments as $unpublished_assignment)
-                <a href="/assignment/{{  $unpublished_assignment->assignment_id }}"> {{ $unpublished_assignment->title }} </a>
-            @endforeach
-        @endif
-    </div>
-    @endlecturer
+    <div class="container mx-auto px-4 py-8">
+        <!-- Published Assignments Section -->
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white dark:text-gray-900">Published Assignments</h2>
+                <div class="text-sm text-gray-300 dark:text-gray-600">
+                    {{ $assignments->where('is_published', true)->count() }} assignments
+                </div>
+            </div>
 
-    <!-- Classroom Filter (if lecturer has multiple classes) -->
-    {{-- @if($classrooms->count() > 1)
-    <div class="mb-6">
-        <label for="classroom-filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Filter by Class</label>
-        <select id="classroom-filter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <option value="all">All Classes</option>
-            @foreach($classrooms as $classroom)
-            <option value="{{ $classroom->class_id }}">{{ $classroom->class_code }} - {{ $classroom->course->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    @endif --}}
+            @if($assignments->where('is_published', true)->isEmpty())
+                <div class="text-center py-12 dark:bg-white/50 bg-gray-800/50 rounded-lg border border-dashed border-gray-700 dark:border-gray-300">
+                    <svg class="w-12 h-12 mx-auto dark:text-gray-400 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="mt-4 text-lg font-medium text-gray-200 dark:text-gray-700">No published assignments</h3>
+                    <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">Check back later for new assignments</p>
+                </div>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($assignments->where('is_published', true) as $assignment)
+                        <a href="/assignment/{{ $assignment->assignment_id }}"
+                        class="group relative block p-6 dark:bg-white bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border dark:border-gray-200 border-gray-700 dark:hover:border-blue-500 hover:border-blue-400 overflow-hidden">
+                            <!-- Status ribbon -->
+                            <div class="absolute top-0 right-0 dark:bg-blue-600 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
+                                {{ $assignment->deadline && now()->gt($assignment->deadline) ? 'CLOSED' : 'ACTIVE' }}
+                            </div>
 
-    <!-- Assignments List -->
-    {{-- <div class="space-y-4">
-        @forelse($assignments as $assignment)
-        <a href="/assignment/{{ $assignment->assignment_id }}" class="block group">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-lg transition-shadow border-l-4 border-blue-500 group-hover:border-blue-600">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                            <h3 class="mb-3 text-lg font-bold dark:text-gray-900 text-white dark:group-hover:text-blue-600 group-hover:text-blue-400 transition-colors">
+                                {{ $assignment->title }}
+                            </h3>
+
+                            <div class="flex items-center text-sm dark:text-gray-500 text-gray-400 mb-3">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                                {{ $assignment->classroom->course->name }}
+                            </div>
+
+                            <div class="flex items-center text-sm dark:text-gray-500 text-gray-400 mb-4">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                {{ $assignment->classroom->class_code }}
+                            </div>
+
+                            <div class="flex justify-between items-center pt-3 border-t dark:border-gray-100 border-gray-700">
+                                <span class="text-sm font-medium {{ $assignment->deadline && now()->gt($assignment->deadline) ? 'text-red-500' : 'text-blue-500' }}">
+                                    @if($assignment->deadline)
+                                        {{ now()->gt($assignment->deadline) ? 'Closed' : 'Due' }}:
+                                        {{ \Carbon\Carbon::parse($assignment->deadline)->format('M d, Y') }}
+                                    @else
+                                        No deadline
+                                    @endif
+                                </span>
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full dark:bg-blue-100 bg-blue-900/50 dark:text-blue-600 text-blue-300 dark:group-hover:bg-blue-200 group-hover:bg-blue-800 transition-colors">
+                                    &rarr;
+                                </span>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <!-- Unpublished Assignments Section (Lecturer only) -->
+        @lecturer
+        @if(!$unpublished_assignments->isEmpty())
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white dark:text-gray-900">Draft Assignments</h2>
+                <div class="text-sm text-gray-300 dark:text-gray-600">
+                    {{ $unpublished_assignments->count() }} drafts
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($unpublished_assignments as $assignment)
+                    <a href="/assignment/{{ $assignment->assignment_id }}"
+                    class="group relative block p-6 dark:bg-white bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border-2 border-dashed dark:border-gray-300 border-gray-600 dark:hover:border-yellow-400 hover:border-yellow-500 overflow-hidden">
+                        <!-- Draft badge -->
+                        <div class="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
+                            DRAFT
+                        </div>
+
+                        <h3 class="mb-3 text-lg font-bold dark:text-gray-900 text-white dark:group-hover:text-yellow-600 group-hover:text-yellow-400 transition-colors">
                             {{ $assignment->title }}
                         </h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {{ $assignment->classroom->class_code }} - {{ $assignment->classroom->course->name }}
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ $assignment->deadline->isPast() ? 'red' : 'green' }}-100 text-{{ $assignment->deadline->isPast() ? 'red' : 'green' }}-800 dark:bg-{{ $assignment->deadline->isPast() ? 'red' : 'green' }}-900/50 dark:text-{{ $assignment->deadline->isPast() ? 'red' : 'green' }}-400">
-                            {{ $assignment->deadline->isPast() ? 'Closed' : 'Open' }}
-                        </span>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Due: {{ $assignment->deadline->format('M d, Y H:i') }}
-                        </p>
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-between items-center">
-                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        {{ $assignment->submissions_count }} submissions
-                    </div>
-                    <span class="text-sm font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300">
-                        View details →
-                    </span>
-                </div>
-            </div>
-        </a>
-        @empty
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">No assignments yet</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new assignment.</p>
-            <div class="mt-6">
-                <a href="/assignment/new-assignment" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Create First Assignment
-                </a>
+
+                        <div class="flex items-center text-sm dark:text-gray-500 text-gray-400 mb-3">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            {{ $assignment->classroom->course->name }}
+                        </div>
+
+                        <div class="flex items-center text-sm dark:text-gray-500 text-gray-400 mb-4">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            {{ $assignment->classroom->class_code }}
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 border-t dark:border-gray-100 border-gray-700">
+                            <span class="text-sm font-medium dark:text-gray-500 text-gray-400">
+                                Created: {{ $assignment->created_at->format('M d, Y') }}
+                            </span>
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full dark:bg-yellow-100 bg-yellow-900/50 dark:text-yellow-600 text-yellow-300 dark:group-hover:bg-yellow-200 group-hover:bg-yellow-800 transition-colors">
+                                &rarr;
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
             </div>
         </div>
-        @endforelse
-    </div> --}}
-
-    {{-- @push('scripts')
-    <script>
-        // Classroom filter functionality
-        document.getElementById('classroom-filter').addEventListener('change', function() {
-            const classId = this.value;
-            if(classId === 'all') {
-                window.location.href = '/assignments';
-            } else {
-                window.location.href = `/assignments?class=${classId}`;
-            }
-        });
-    </script>
-    @endpush --}}
+        @endif
+        @endlecturer
+    </div>
 </x-layout>

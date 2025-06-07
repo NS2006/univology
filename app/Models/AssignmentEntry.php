@@ -5,20 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Choice extends Model
+class AssignmentEntry extends Model
 {
     protected $guarded = ['id'];
 
-    protected $with = ['question'];
+    protected $with = ['assignment', 'enrollment'];
 
-    public function question(): BelongsTo{
-        return $this->belongsTo(Question::class);
+    public function assignment(): BelongsTo{
+        return $this->belongsTo(Assignment::class);
     }
 
-    public function correct_choice(): HasOne{
-        return $this->hasOne(CorrectChoice::class);
+    public function enrollment(): BelongsTo{
+        return $this->belongsTo(Enrollment::class);
     }
 
     public function student_choices(): HasMany{

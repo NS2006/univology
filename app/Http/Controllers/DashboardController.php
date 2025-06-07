@@ -45,6 +45,9 @@ class DashboardController extends Controller
                 ->orderBy('date', 'ASC')
                 ->orderBy('start_time', 'ASC')
                 ->first();
+
+
+            $assignments = $classrooms->pluck('assignments')->flatten()->where('is_published', true);
         } else {
             $u = $user->lecturer;
             $classrooms = $u->classrooms;
@@ -68,13 +71,17 @@ class DashboardController extends Controller
                 ->orderBy('date', 'ASC')
                 ->orderBy('start_time', 'ASC')
                 ->first();
+
+
+            $assignments = $classrooms->pluck('assignments')->flatten();
         }
 
         return view('dashboard', [
             'title' => 'Univology | Dashboard',
             'classrooms' => $classrooms,
             'enrollments' => $enrollments,
-            'topSession' => $topSession
+            'topSession' => $topSession,
+            'assignments' => $assignments,
         ]);
     }
 
